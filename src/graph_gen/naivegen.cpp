@@ -1,6 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-
+#include <cstdlib>
 
 /**
  * @brief Generate weigthed graph where each tie is randomly generated.
@@ -16,15 +14,12 @@
  */
 float ** generate_naive_graph(int size, float min, float max, int seed) {
 
-    if(max < min) {
-        perror("Variable min is greater than max!");
-        exit(1);
-    }
+    // @TODO: Throw an exception if min > max
 
-    float ** graph = (float **) malloc(size * sizeof(float *) * size);
+    float ** graph = new float*[size];
     srand(seed);
     for (int i = 0; i < size; i++) {
-        graph[i] = (float *) malloc(size * sizeof(float) * size);
+        graph[i] = new float[size];
         for (int j = 0; j < size; j++) {
             if (i == j) {
                 graph[i][j] = 0;
@@ -33,6 +28,6 @@ float ** generate_naive_graph(int size, float min, float max, int seed) {
             }
         }
     }
-    
+
     return graph;
 }

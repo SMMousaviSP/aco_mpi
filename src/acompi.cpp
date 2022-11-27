@@ -1,9 +1,10 @@
-#include <stdio.h>
-#include "graph_gen/naivegen.c"
+#include <iostream>
+#include "graph_gen/naivegen.cpp"
 
 #define SIZE 5
 
-
+const float alpha = 0.5;
+const float beta = 0.5;
 
 int main() {
     int graph_size = SIZE;
@@ -16,9 +17,9 @@ int main() {
     // print graph_data
     for (int i = 0; i < graph_size; i++) {
         for (int j = 0; j < graph_size; j++) {
-            printf("%f ", graph_data[i][j]);
+            std::cout << graph_data[i][j] << " ";
         }
-        printf("\n");
+        std::cout << std::endl;
     }
 
     return 0;
