@@ -1,4 +1,6 @@
 #include <cstdlib>
+#include <stdexcept>
+
 
 /**
  * @brief Generate weigthed graph where each tie is randomly generated.
@@ -14,7 +16,10 @@
  */
 float ** generate_naive_graph(int size, float min, float max, int seed) {
 
-    // @TODO: Throw an exception if min > max
+    // Throw an exception if min is greater than max
+    if (min > max) {
+        throw std::invalid_argument("min is greater than max");
+    }
 
     float ** graph = new float*[size];
     srand(seed);
