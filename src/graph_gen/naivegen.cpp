@@ -38,3 +38,22 @@ T_GRAPH ** generateNaiveGraph(int size, T_GRAPH min, T_GRAPH max, int seed) {
 
     return graph;
 }
+
+
+/**
+ * @brief Generate pheromones matrix
+ * 
+ * @param size       size of the adjacency matrix
+ * @param initValue  initial value of the pheromones
+ * @return T_PHER**  adjacency matrix
+ */
+T_PHER ** generatePheromones(int size, T_PHER initValue) {
+    T_PHER ** pheromones = new T_PHER*[size];
+    for (int i = 0; i < size; i++) {
+        pheromones[i] = new T_PHER[size];
+        for (int j = 0; j < size; j++) {
+            pheromones[i][j] = initValue;
+        }
+    }
+    return pheromones;
+}
