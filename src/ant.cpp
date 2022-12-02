@@ -1,8 +1,23 @@
 #include <vector>
+#include <unordered_map>
 
 #include "settings.h"
 
 using namespace std;
+
+// @TODO check if this value is right
+#define K_CONST 0.4
+
+
+/**
+ * @brief calculates static probability of choosing a tie
+ * 
+ * @param tie       tie of which calculate probability
+ * @return double   probability of tie
+ */
+double staticProb(T_GRAPH tie) {
+    return K_CONST / tie;
+}
 
 
 /**
@@ -41,4 +56,22 @@ vector<int> eliminateAlreadyVisitedNeighbors(vector<int> neighbors, vector<int> 
         }
     }
     return result;
+}
+
+
+unordered_map<int, double> calculateProbability(int node, vector<int> validNeighbors, T_GRAPH** graph,  T_PHER** pheromones, float exploitation, float exploration) {
+    double denominator = 0;
+    // for element in validNeighbors calculate probability and store in map
+    unordered_map<int, double> probabilities;
+    for (int i = 0; i < validNeighbors.size(); i++) {
+        double probability = pow(pheromones[node][validNeighbors[i]], exploitation) * pow(staticProb(graph[node][validNeighbors[i]]), exploration);
+        denominator += probability;
+        probabilities[validNeighbors[i]] = probability;
+    }
+
+    // normalize probabilities
+    for (int i = 0; i < validNeighbors.size(); i++) {
+        probabilities[validNeighbors[i]] /= denominator;
+    }
+    return probabilities;
 }

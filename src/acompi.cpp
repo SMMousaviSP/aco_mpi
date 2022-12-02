@@ -62,6 +62,14 @@ int main() {
         cout << endl;
     }
     cout << endl;
+
+    // calculate probability and print it
+    unordered_map<int, double> probability = calculateProbability(2, neighborsCleaned, graphData, pheromones, alpha, beta);
+    cout << "probability: " << endl;
+    for (auto const& x : probability) {
+        cout << x.first << " " << x.second << endl;
+    }
+    cout << endl;
     
 
     return 0;
