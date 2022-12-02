@@ -14,24 +14,24 @@
  * @param min       minimum generated number
  * @param max       maximum generated number
  * @param seed      random generation
- * @return float**  adjacency matrix
+ * @return T_GRAPH**  adjacency matrix
  */
-float ** generateNaiveGraph(int size, float min, float max, int seed) {
+T_GRAPH ** generateNaiveGraph(int size, T_GRAPH min, T_GRAPH max, int seed) {
 
     // Throw an exception if min is greater than max
     if (min > max) {
         throw std::invalid_argument("min is greater than max");
     }
 
-    float ** graph = new float*[size];
+    T_GRAPH ** graph = new T_GRAPH*[size];
     srand(seed);
     for (int i = 0; i < size; i++) {
-        graph[i] = new float[size];
+        graph[i] = new T_GRAPH[size];
         for (int j = 0; j < size; j++) {
             if (i == j) {
                 graph[i][j] = NULL_TIE;
             } else {
-                graph[i][j] = (((float)rand() / (float)(RAND_MAX)) * (max - min)) + min;
+                graph[i][j] = (((T_GRAPH)rand() / (T_GRAPH)(RAND_MAX)) * (max - min)) + min;
             }
         }
     }

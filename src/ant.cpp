@@ -15,7 +15,7 @@ using namespace std;
  * @param graphSize    size of the graph
  * @return vector<int>  the neighbors of "node"
  */
-vector<int> getNeighbors(int node, float** graphData, int graphSize) {
+vector<int> getNeighbors(int node, T_GRAPH** graphData, int graphSize) {
     vector<int> neighbors;
     for (int i = 0; i < graphSize; i++) {
         if (graphData[node][i] != NULL_TIE) {

@@ -11,7 +11,7 @@ const float beta = 0.5;
 
 int main() {
     int graphSize = SIZE;
-    float** graphData;
+    T_GRAPH** graphData;
     graphData = generateNaiveGraph(graphSize, 1.0, 6.0, 0);
 
     // run ants
