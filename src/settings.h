@@ -9,3 +9,9 @@
 #define K_CONST 0.4
 #define PHER_BUDGET 0.4
 #define SEED 0
+
+// Structs
+struct antPath {
+    vector<int> path;
+    T_GRAPH pathLength;
+};
