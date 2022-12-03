@@ -5,8 +5,6 @@
 
 using namespace std;
 
-// @TODO check if this value is right
-#define K_CONST 0.4
 
 
 /**
@@ -74,4 +72,24 @@ unordered_map<int, double> calculateProbability(int node, vector<int> validNeigh
         probabilities[validNeighbors[i]] /= denominator;
     }
     return probabilities;
+}
+
+/**
+ * @brief choose a neighbor based on probability
+ * 
+ * @param probabilities  probability of choosing a neighbor
+ * @param seed           seed for random number generator
+ * @return int           chosen neighbor
+ */
+int chooseNextNode(unordered_map<int, double> probabilities, int seed) {
+    srand(seed);
+    double randomDouble = (double) rand() / (double) RAND_MAX;
+    for (auto const& x : probabilities) {
+        if (randomDouble < x.second) {
+            return x.first;
+        }
+        randomDouble -= x.second;
+    }
+    // throw exception that the probabilities do not sum up to 1
+    throw std::invalid_argument("probabilities do not sum up to 1");
 }
