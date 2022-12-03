@@ -6,7 +6,6 @@
 using namespace std;
 
 
-
 /**
  * @brief calculates static probability of choosing a tie
  * 
@@ -23,9 +22,9 @@ double staticProb(T_GRAPH tie) {
  *
  * assume square matrix for "graphData"
  * 
- * @param node          Node of which you want to obtain neighbors
+ * @param node          node of which you want to obtain neighbors
  * @param graphData     graph of refence
- * @param graphSize    size of the graph
+ * @param graphSize     size of the graph
  * @return vector<int>  the neighbors of "node"
  */
 vector<int> getNeighbors(int node, T_GRAPH** graphData, int graphSize) {
@@ -57,7 +56,18 @@ vector<int> eliminateAlreadyVisitedNeighbors(vector<int> neighbors, vector<int> 
 }
 
 
-unordered_map<int, double> calculateProbability(int node, vector<int> validNeighbors, T_GRAPH** graph,  T_PHER** pheromones, float exploitation, float exploration) {
+/**
+ * @brief calculate the probability of choosing each neighbour of node
+ * 
+ * @param node                          node of which you want to calculate the possibility of next neighbor
+ * @param graph                         graph of reference
+ * @param pheromones                    pheromones of reference
+ * @param exploitation                  exploitation factor
+ * @param exploration                   exploration factor
+ * @return unordered_map<int, double>   probabilities of choosing a neighbor node as next node
+ */
+unordered_map<int, double> calculateProbability(int node, T_GRAPH** graph, int graphSize, T_PHER** pheromones, float exploitation, float exploration) {
+    vector<int> validNeighbors = getNeighbors(node, graph, graphSize);
     double denominator = 0;
     // for element in validNeighbors calculate probability and store in map
     unordered_map<int, double> probabilities;
@@ -74,10 +84,11 @@ unordered_map<int, double> calculateProbability(int node, vector<int> validNeigh
     return probabilities;
 }
 
+
 /**
  * @brief choose a neighbor based on probability
  * 
- * @param probabilities  probability of choosing a neighbor
+ * @param probabilities  probabilities of choosing a neighbor node as next node
  * @param seed           seed for random number generator
  * @return int           chosen neighbor
  */

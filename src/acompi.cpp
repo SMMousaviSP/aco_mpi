@@ -15,7 +15,7 @@ int main() {
     int graphSize = SIZE;
     T_GRAPH** graphData;
     T_PHER** pheromones;
-    graphData = generateNaiveGraph(graphSize, 1.0, 6.0, 0);
+    graphData = generateNaiveGraph(graphSize, 1.0, 6.0, SEED);
     pheromones = generatePheromones(graphSize, 1.0);
 
     // run ants
@@ -64,13 +64,12 @@ int main() {
     cout << endl;
 
     // calculate probability and print it
-    unordered_map<int, double> probability = calculateProbability(2, neighborsCleaned, graphData, pheromones, alpha, beta);
+    unordered_map<int, double> probability = calculateProbability(2, graphData, SIZE, pheromones, alpha, beta);
     cout << "probability: " << endl;
     for (auto const& x : probability) {
         cout << x.first << " " << x.second << endl;
     }
     cout << endl;
-    
 
     return 0;
 }
