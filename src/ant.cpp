@@ -5,14 +5,11 @@
 
 using namespace std;
 
-struct antPath {
-    vector<int> path;
-    T_GRAPH pathLength;
-};
-
 
 /**
  * @brief                Compute the path that a single ant will take
+ *
+ * pseudo-random generator is controlled by macro 'SEED'
  *
  * @param node           node of which you want to calculate the possibility of next neighbor
  * @param graph          graph of reference
@@ -40,6 +37,7 @@ antPath antRun(int node, T_GRAPH** graph, int graphSize, T_PHER** pheromones, fl
         currentNode = nextNode;
     }
     antPath.pathLength += graph[currentNode][node];
+    antPath.path.push_back(node);
     return antPath;
 }
 
@@ -47,6 +45,8 @@ antPath antRun(int node, T_GRAPH** graph, int graphSize, T_PHER** pheromones, fl
 /**
  * @brief calculates static probability of choosing a tie
  * 
+ * constant is controlled by macro 'K_CONST'
+ *
  * @param tie       tie of which calculate probability
  * @return double   probability of tie
  */
