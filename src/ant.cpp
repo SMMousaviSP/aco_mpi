@@ -5,7 +5,7 @@
 
 using namespace std;
 
-struct path {
+struct antPath {
     vector<int> path;
     T_GRAPH pathLength;
 };
@@ -20,12 +20,12 @@ struct path {
  * @param pheromones     pheromones of reference
  * @param exploitation   exploitation factor
  * @param exploration    exploration factor
- * @return path          path and path length that the ant traveled
+ * @return antPath       path and path length that the ant traveled
  */
-path antRun(int node, T_GRAPH** graph, int graphSize, T_PHER** pheromones, float exploitation, float exploration) {
+antPath antRun(int node, T_GRAPH** graph, int graphSize, T_PHER** pheromones, float exploitation, float exploration) {
     vector<int> alreadyVisited;
     alreadyVisited.push_back(node);
-    path antPath;
+    antPath antPath;
     antPath.path.push_back(node);
     antPath.pathLength = 0;
     unordered_map<int, double> probabilities;
