@@ -21,7 +21,12 @@
  * @param antPath       path covered by an ant
  * @param pheromones    pheromone metrices
  */
-void depositAntPheromone(antPath antPath, T_PHER** pheromones) {
+void depositAntPheromone(antPath antPath, T_PHER** pheromones, int graphSize) {
+    // if the ant didn't visit all the nodes, return (eliminating the ant)
+    if (antPath.path.size() != graphSize + 1) {
+        return;
+    }
+
     // iterate over path in antpath
     for (int i = 0; i < antPath.path.size() - 1; i++) {
         // get current node and next node
