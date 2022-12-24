@@ -5,6 +5,19 @@
 
 using namespace std;
 
+struct antPath {
+    vector<int> path;
+    T_GRAPH pathLength;
+};
+
+
+antPath antRun(int, T_GRAPH**, int, T_PHER**, float, float);
+double staticProb(T_GRAPH);
+vector<int> getNeighbors(int, T_GRAPH**, int);
+vector<int> eliminateAlreadyVisitedNeighbors(vector<int>, vector<int>);
+unordered_map<int, double> calculateProbability(int, T_GRAPH**, int, T_PHER**, float, float);
+int chooseNextNode(unordered_map<int, double>, int);
+
 
 /**
  * @brief                Compute the path that a single ant will take
