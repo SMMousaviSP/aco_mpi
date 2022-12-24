@@ -9,3 +9,6 @@
 #define K_CONST 0.4
 #define PHER_CONST 0.4
 #define SEED 0
+
+#define ANTS_N 10
+#define ANTS_ITER 100
