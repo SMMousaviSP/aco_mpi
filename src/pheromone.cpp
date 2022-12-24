@@ -20,6 +20,7 @@
  * 
  * @param antPath       path covered by an ant
  * @param pheromones    pheromone metrices
+ * @param graphSize     size of the graph
  */
 void depositAntPheromone(AntPath antPath, T_PHER** pheromones, int graphSize) {
     // if the ant didn't visit all the nodes, return (eliminating the ant)
