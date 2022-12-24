@@ -12,7 +12,7 @@ double staticProb(T_GRAPH);
 vector<int> getNeighbors(int, T_GRAPH**, int);
 vector<int> eliminateAlreadyVisitedNeighbors(vector<int>, vector<int>);
 unordered_map<int, double> calculateProbability(int, T_GRAPH**, int, T_PHER**, float, float);
-int chooseNextNode(unordered_map<int, double>, int);
+int chooseNextNode(unordered_map<int, double>);
 
 
 /**
@@ -39,7 +39,7 @@ AntPath antRun(int node, T_GRAPH** graph, int graphSize, T_PHER** pheromones, fl
     int nextNode = -1;
     while (alreadyVisited.size() < graphSize) {
         probabilities = calculateProbability(currentNode, graph, graphSize, pheromones, exploitation, exploration);
-        nextNode = chooseNextNode(probabilities, SEED);
+        nextNode = chooseNextNode(probabilities);
         antPath.path.push_back(nextNode);
         alreadyVisited.push_back(nextNode);
         antPath.pathLength += graph[currentNode][nextNode];
@@ -143,8 +143,7 @@ unordered_map<int, double> calculateProbability(int node, T_GRAPH** graph, int g
  * @param seed           seed for random number generator
  * @return int           chosen neighbor
  */
-int chooseNextNode(unordered_map<int, double> probabilities, int seed) {
-    srand(seed);
+int chooseNextNode(unordered_map<int, double> probabilities) {
     double randomDouble = (double) rand() / (double) RAND_MAX;
     for (auto const& x : probabilities) {
         if (randomDouble < x.second) {
