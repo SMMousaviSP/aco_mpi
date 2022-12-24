@@ -49,8 +49,11 @@ antPath antRun(int node, T_GRAPH** graph, int graphSize, T_PHER** pheromones, fl
         antPath.pathLength += graph[currentNode][nextNode];
         currentNode = nextNode;
     }
-    antPath.pathLength += graph[currentNode][node];
-    antPath.path.push_back(node);
+    // Check if the last edge to return back to the initial node exists (for not fully connected graphs)
+    if (graph[currentNode][node] != NULL_TIE) {
+        antPath.pathLength += graph[currentNode][node];
+        antPath.path.push_back(node);
+    }
     return antPath;
 }
 
