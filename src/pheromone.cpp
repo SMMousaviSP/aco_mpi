@@ -1,4 +1,5 @@
 #include "settings.h"
+#include "structs.h"
 
 // formula: delta(dep, arr) = (1-EVAP_RATE) + sum(if_and_went_there, PHER_BUDGET/length)
 

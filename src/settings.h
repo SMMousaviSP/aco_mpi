@@ -1,3 +1,6 @@
+#ifndef SETTINGS_H
+#define SETTINGS_H
+
 #define NULL_TIE -1
 #define T_PHER float
 #define T_GRAPH float
@@ -12,3 +15,5 @@
 
 #define ANTS_N 10
 #define ANTS_ITER 100
+
+#endif

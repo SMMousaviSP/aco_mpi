@@ -2,13 +2,9 @@
 #include <unordered_map>
 
 #include "settings.h"
+#include "structs.h"
 
 using namespace std;
-
-struct AntPath {
-    vector<int> path;
-    T_GRAPH pathLength;
-};
 
 
 AntPath antRun(int, T_GRAPH**, int, T_PHER**, float, float);

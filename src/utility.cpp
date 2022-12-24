@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "settings.h"
+#include "structs.h"
 
 using namespace std;
 
@@ -25,5 +26,16 @@ void printPheromone(T_PHER** pheromones, int graphSize) {
         }
         cout << endl;
     }
+    cout << endl;
+}
+
+
+void printPath(AntPath path) {
+    cout << "path: " << endl;
+    for (int i = 0; i < path.path.size(); i++) {
+        cout << path.path[i] << " ";
+    }
+    cout << endl;
+    cout << "path cost: " << path.pathLength << endl;
     cout << endl;
 }
