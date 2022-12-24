@@ -19,8 +19,6 @@ int main() {
     graphData = generateNaiveGraph(graphSize, 1.0, 6.0, SEED);
     pheromones = generatePheromones(graphSize, 1.0);
 
-    // run ants
-    // @TODO
     vector<int> neighbors = getNeighbors(2, graphData, graphSize);
     vector<int> alreadyVisited;
     alreadyVisited.push_back(1);
@@ -92,7 +90,7 @@ int main() {
     antPath.path.push_back(1);
     antPath.pathLength = 10;
     // Deposit pheromones and print it
-    depositAntPheromone(antPath, pheromones);
+    depositAntPheromone(antPath, pheromones, SIZE);
     cout << "deposited pheromones: " << endl;
     for (int i = 0; i < graphSize; i++) {
         for (int j = 0; j < graphSize; j++) {
@@ -101,6 +99,8 @@ int main() {
         cout << endl;
     }
     cout << endl;
+
+    // Run ants
 
     return 0;
 }
