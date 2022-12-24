@@ -28,7 +28,7 @@ void depositAntPheromone(antPath antPath, T_PHER** pheromones) {
         int currentNode = antPath.path[i];
         int nextNode = antPath.path[i + 1];
         // calculate delta
-        T_PHER pheromoneTrace = PHER_BUDGET / antPath.pathLength;
+        T_PHER pheromoneTrace = PHER_CONST / antPath.pathLength;
         // update pheromones
         pheromones[currentNode][nextNode] += pheromoneTrace;
     }

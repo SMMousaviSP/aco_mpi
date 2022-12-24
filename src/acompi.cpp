@@ -81,6 +81,7 @@ int main() {
         }
         cout << endl;
     }
+    cout << endl;
 
     // Create a sample antPath
     antPath antPath;
@@ -99,7 +100,7 @@ int main() {
         }
         cout << endl;
     }
-
+    cout << endl;
 
     return 0;
 }
