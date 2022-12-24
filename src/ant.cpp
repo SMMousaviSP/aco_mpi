@@ -11,7 +11,7 @@ AntPath antRun(int, T_GRAPH**, int, T_PHER**, float, float);
 double staticProb(T_GRAPH);
 vector<int> getNeighbors(int, T_GRAPH**, int);
 vector<int> eliminateAlreadyVisitedNeighbors(vector<int>, vector<int>);
-unordered_map<int, double> calculateProbability(int, T_GRAPH**, int, T_PHER**, float, float);
+unordered_map<int, double> calculateProbability(int, T_GRAPH**, int, T_PHER**, vector<int>, float, float);
 int chooseNextNode(unordered_map<int, double>);
 
 
@@ -38,7 +38,7 @@ AntPath antRun(int node, T_GRAPH** graph, int graphSize, T_PHER** pheromones, fl
     int currentNode = node;
     int nextNode = -1;
     while (alreadyVisited.size() < graphSize) {
-        probabilities = calculateProbability(currentNode, graph, graphSize, pheromones, exploitation, exploration);
+        probabilities = calculateProbability(currentNode, graph, graphSize, pheromones, alreadyVisited, exploitation, exploration);
         nextNode = chooseNextNode(probabilities);
         antPath.path.push_back(nextNode);
         alreadyVisited.push_back(nextNode);
@@ -113,12 +113,14 @@ vector<int> eliminateAlreadyVisitedNeighbors(vector<int> neighbors, vector<int> 
  * @param graph                         graph of reference
  * @param graphSize                     size of the graph
  * @param pheromones                    pheromones of reference
+ * @param alreadyVisited                already visited neighbors to be eliminated from neighbors
  * @param exploitation                  exploitation factor
  * @param exploration                   exploration factor
  * @return unordered_map<int, double>   probabilities of choosing a neighbor node as next node
  */
-unordered_map<int, double> calculateProbability(int node, T_GRAPH** graph, int graphSize, T_PHER** pheromones, float exploitation, float exploration) {
-    vector<int> validNeighbors = getNeighbors(node, graph, graphSize);
+unordered_map<int, double> calculateProbability(int node, T_GRAPH** graph, int graphSize, T_PHER** pheromones, vector<int> alreadyVisited, float exploitation, float exploration) {
+    vector<int> neighbors = getNeighbors(node, graph, graphSize);
+    vector<int> validNeighbors = eliminateAlreadyVisitedNeighbors(neighbors, alreadyVisited);
     double denominator = 0;
     // for element in validNeighbors calculate probability and store in map
     unordered_map<int, double> probabilities;
