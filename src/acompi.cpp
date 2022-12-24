@@ -3,6 +3,7 @@
 
 #include "graph_gen/naivegen.cpp"
 #include "ant.cpp"
+#include "pheromone.cpp"
 
 using namespace std;
 
@@ -70,6 +71,35 @@ int main() {
         cout << x.first << " " << x.second << endl;
     }
     cout << endl;
+
+    // Evaporate pheromones and print it
+    evaporatePheromones(pheromones, graphSize);
+    cout << "evaporated pheromones: " << endl;
+    for (int i = 0; i < graphSize; i++) {
+        for (int j = 0; j < graphSize; j++) {
+            cout << pheromones[i][j] << " ";
+        }
+        cout << endl;
+    }
+
+    // Create a sample antPath
+    antPath antPath;
+    antPath.path.push_back(1);
+    antPath.path.push_back(2);
+    antPath.path.push_back(3);
+    antPath.path.push_back(4);
+    antPath.path.push_back(1);
+    antPath.pathLength = 10;
+    // Deposit pheromones and print it
+    depositAntPheromone(antPath, pheromones);
+    cout << "deposited pheromones: " << endl;
+    for (int i = 0; i < graphSize; i++) {
+        for (int j = 0; j < graphSize; j++) {
+            cout << pheromones[i][j] << " ";
+        }
+        cout << endl;
+    }
+
 
     return 0;
 }
