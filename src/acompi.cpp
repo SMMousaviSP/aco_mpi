@@ -82,7 +82,7 @@ int main() {
     cout << endl;
 
     // Create a sample antPath
-    antPath antPath;
+    AntPath antPath;
     antPath.path.push_back(1);
     antPath.path.push_back(2);
     antPath.path.push_back(3);
@@ -98,9 +98,7 @@ int main() {
         }
         cout << endl;
     }
-    cout << endl;
-
-    // Run ants
+    cout << endl;    
 
     return 0;
 }

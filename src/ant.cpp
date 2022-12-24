@@ -5,13 +5,13 @@
 
 using namespace std;
 
-struct antPath {
+struct AntPath {
     vector<int> path;
     T_GRAPH pathLength;
 };
 
 
-antPath antRun(int, T_GRAPH**, int, T_PHER**, float, float);
+AntPath antRun(int, T_GRAPH**, int, T_PHER**, float, float);
 double staticProb(T_GRAPH);
 vector<int> getNeighbors(int, T_GRAPH**, int);
 vector<int> eliminateAlreadyVisitedNeighbors(vector<int>, vector<int>);
@@ -32,10 +32,10 @@ int chooseNextNode(unordered_map<int, double>, int);
  * @param exploration    exploration factor
  * @return antPath       path and path length that the ant traveled
  */
-antPath antRun(int node, T_GRAPH** graph, int graphSize, T_PHER** pheromones, float exploitation, float exploration) {
+AntPath antRun(int node, T_GRAPH** graph, int graphSize, T_PHER** pheromones, float exploitation, float exploration) {
     vector<int> alreadyVisited;
     alreadyVisited.push_back(node);
-    antPath antPath;
+    AntPath antPath;
     antPath.path.push_back(node);
     antPath.pathLength = 0;
     unordered_map<int, double> probabilities;
