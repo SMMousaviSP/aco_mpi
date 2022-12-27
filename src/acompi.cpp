@@ -26,8 +26,9 @@ int main() {
     pheromones = generatePheromones(graphSize, 1.0);
 
     // Running the Ants
-    AntPath antPathArray[ANTS_N];
+    AntPath ** antPathArrayIter = new AntPath*[ANTS_ITER];
     for (int i = 0; i < ANTS_ITER; i++) {
+        AntPath * antPathArray = new AntPath[ANTS_N];
         for (int j = 0; j < ANTS_N; j++) {
             // Choose a random starting node from 0 to SIZE
             int startingNode = rand() % SIZE;
@@ -37,16 +38,15 @@ int main() {
             depositAntPheromone(antPathArray[j], pheromones, SIZE);
         }
         evaporatePheromones(pheromones, SIZE);
+
+        // Saving the result of each iteration to a file
+        antPathArrayIter[i] = antPathArray;
     }
+    savePath(antPathArrayIter, "result.csv");
+
     printGraph(graphData, SIZE);
     printPheromone(pheromones, SIZE);
 
-    // print all of the paths
-    for (int i = 0; i < ANTS_N; i++) {
-        printPath(antPathArray[i]);
-    }
-    
-    
 
     // vector<int> neighbors = getNeighbors(2, graphData, graphSize);
     // vector<int> alreadyVisited;
