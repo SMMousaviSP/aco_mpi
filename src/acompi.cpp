@@ -28,13 +28,13 @@ int main() {
     // Running the Ants
     AntPath antPathArray[ANTS_N];
     for (int i = 0; i < ANTS_ITER; i++) {
-        for (int i = 0; i < ANTS_N; i++) {
+        for (int j = 0; j < ANTS_N; j++) {
             // Choose a random starting node from 0 to SIZE
             int startingNode = rand() % SIZE;
-            antPathArray[i] = antRun(startingNode, graphData, SIZE, pheromones, alpha, beta);
+            antPathArray[j] = antRun(startingNode, graphData, SIZE, pheromones, alpha, beta);
         }
-        for (int i = 0; i < ANTS_N; i++) {
-            depositAntPheromone(antPathArray[i], pheromones, SIZE);
+        for (int j = 0; j < ANTS_N; j++) {
+            depositAntPheromone(antPathArray[j], pheromones, SIZE);
         }
         evaporatePheromones(pheromones, SIZE);
     }
