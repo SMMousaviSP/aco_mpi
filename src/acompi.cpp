@@ -43,6 +43,7 @@ int main() {
         antPathArrayIter[i] = antPathArray;
     }
     savePath(antPathArrayIter, "result.csv");
+    saveMetadata("metadata.csv",SIZE, alpha, beta);
 
     printGraph(graphData, SIZE);
     printPheromone(pheromones, SIZE);
