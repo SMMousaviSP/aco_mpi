@@ -7,7 +7,7 @@ df::DataFrame = CSV.read("../result.csv", DataFrame)
 
 
 plot(df[!, "iteration"], df[!, "pathLength"])
-savefig("plot.png")
+savefig("env/plot.png")
 
 gdf = groupby(df, :iteration)
 combined = combine(gdf, 
@@ -18,7 +18,7 @@ combined = combine(gdf,
 println(combined)
 
 plot(combined[!, "iteration"], combined[!, "mean"], ribbon=combined[!, "std"])
-savefig("plot_mean.png")
+savefig("env/plot_mean.png")
 
 plot(combined[!, "iteration"], combined[!, "best"])
-savefig("plot_best.png")
+savefig("env/plot_best.png")
