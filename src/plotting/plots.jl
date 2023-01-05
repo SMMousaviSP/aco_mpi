@@ -3,7 +3,7 @@ using CSV
 using DataFrames
 using Statistics
 
-df::DataFrame = CSV.read("../result.csv", DataFrame)
+df::DataFrame = CSV.read("../env/result.csv", DataFrame)
 
 
 plot(df[!, "iteration"], df[!, "pathLength"])
