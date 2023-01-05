@@ -401,3 +401,13 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/c,visualstudiocode,linux,macos,emacs,vim,windows,clion,intellij
+
+
+# Adding folders and files related to environment
+.env
+.venv
+env
+venv
+*.env
+*.venv
+
