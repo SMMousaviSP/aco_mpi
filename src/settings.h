@@ -16,4 +16,7 @@
 #define ANTS_N 10
 #define ANTS_ITER 100
 
+// Only used in the parallel version
+#define COMM_NUM 4
+
 #endif
