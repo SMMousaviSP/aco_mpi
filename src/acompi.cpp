@@ -43,6 +43,9 @@ int main() {
                 MPI_Recv(&best_ant_path, sizeof(AntPath), MPI_BYTE, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
                 bestPathArray[i - 1] = best_ant_path;
             }
+			for (int i = 0; i < comm_sz - 1; i++) {
+				printPath(bestPathArray[i])
+			}
             MPI_Barrier(MPI_COMM_WORLD);
         }
         return 0;
