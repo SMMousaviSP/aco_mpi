@@ -40,7 +40,7 @@ int main() {
         for (int j = 0; j < comm_num; j++) {
             AntPath * bestPathArray = new AntPath[comm_sz - 1];
             for (int i = 1; i < comm_sz; i++) {
-                MPI_Recv(&best_ant_path, sizeof(AntPath), MPI_BYTE, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+                MPI_Recv(&best_ant_path, 1, create_mpi_type(best_ant_path), MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
                 bestPathArray[i - 1] = best_ant_path;
             }
 			for (int i = 0; i < comm_sz - 1; i++) {
@@ -76,7 +76,7 @@ int main() {
         if ((i + 1) % comm_num == 0) {
             // Send the best ant path to the master
             AntPath best_ant_path = getBestAntPath(antPathArray, ANTS_N);
-            MPI_Send(&best_ant_path, sizeof(AntPath), MPI_BYTE, 0, 0, MPI_COMM_WORLD);
+            MPI_Send(&best_ant_path, 1, create_mpi_type(best_ant_path), 0, 0, MPI_COMM_WORLD);
             MPI_Barrier(MPI_COMM_WORLD);
         }
     }
@@ -148,4 +148,18 @@ int main() {
     // cout << endl;
 
     return 0;
+}
+
+
+MPI_Datatype create_mpi_type(const AntPath& s) {
+  int count = 2;
+  int blocklengths[2] = {1, s.path.size()};
+  MPI_Datatype types[2] = {MPI_FLOAT, MPI_FLOAT};
+  MPI_Aint offsets[2];
+  offsets[0] = offsetof(AntPath, pathLength);
+  offsets[1] = offsetof(AntPath, path);
+  MPI_Datatype mpi_type;
+  MPI_Type_create_struct(count, blocklengths, offsets, types, &mpi_type);
+  MPI_Type_commit(&mpi_type);
+  return mpi_type;
 }
