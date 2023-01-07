@@ -39,15 +39,11 @@ int main() {
     if (my_rank == 0) {
         for (int j = 0; j < comm_num; j++) {
             for (int i = 1; i < comm_sz; i++) {
-                MPI_Recv(&best_ant_path, sizeof(AntPath), MPI_BYTE, i, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-                cout << "Received from " << i << " the path: ";
-                if (best_ant_path.pathLength < best_length) {
-                    cout << "*";
-                    best_length = best_ant_path.pathLength;
-                }
-                cout << endl;
-                printPath(best_ant_path);
+                AntPath * bestPathArray = new AntPath[comm_sz - 1];
+                MPI_Recv(&best_ant_path, sizeof(AntPath), MPI_BYTE, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+                bestPathArray[i - 1] = best_ant_path;
             }
+            MPI_Barrier(MPI_COMM_WORLD);
         }
         return 0;
     }
@@ -78,6 +74,7 @@ int main() {
             // Send the best ant path to the master
             AntPath best_ant_path = getBestAntPath(antPathArray, ANTS_N);
             MPI_Send(&best_ant_path, sizeof(AntPath), MPI_BYTE, 0, 0, MPI_COMM_WORLD);
+            MPI_Barrier(MPI_COMM_WORLD);
         }
     }
     // savePath(antPathArrayIter, "result.csv");
