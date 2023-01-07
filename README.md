@@ -7,6 +7,11 @@ g++ acompi.cpp
 ./a.out
 ```
 
+# Running on the HPC Cluster
+```bash
+mpic++ -std=c++0x -g -Wall -o env/acompi.out acompi.cpp
+```
+
 # Todo
 - [ ] get time for each iteration, save it in a new CSV
 - [ ] make parallel for main.cpp and ant.cpp
@@ -15,3 +20,4 @@ g++ acompi.cpp
 -- iterate set of folder, check if plots are missing and if so make them
 - [ ] Benchmark
 -- 5 iterations for 5 different graphs
+
