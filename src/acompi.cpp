@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <mpi.h>
+#include <limits>
 
 #include "settings.h"
 #include "structs.h"
@@ -34,26 +35,50 @@ int main() {
     int graphSize = SIZE;
     srand(time(NULL));
 
-    int best_length = 0;
-    T_GRAPH best_ant_length;
+    T_PHER** pheromones;
+    pheromones = generatePheromones(graphSize, 1.0);
+
+    int bestLength = numeric_limits<T_GRAPH>::max();
+    int worstLength = -1;
+    int bestColony = -1;
+    int worstColony = -1;
+
+    T_GRAPH antLength;
     if (my_rank == 0) {
+        MPI_Status status;
+        int source;
         for (int j = 0; j < comm_num; j++) {
-            T_GRAPH * bestLengthArray = new T_GRAPH[comm_sz - 1];
+
             for (int i = 1; i < comm_sz; i++) {
-                MPI_Recv(&best_ant_length, 1, MPI_FLOAT, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-                bestLengthArray[i - 1] = best_ant_length;
+                MPI_Recv(&antLength, 1, MPI_FLOAT, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+                source = status.MPI_SOURCE;
+                if (antLength < bestLength) {
+                    bestLength = antLength;
+                    bestColony = source;
+                }
+                if (antLength > worstLength) {
+                    worstLength = antLength;
+                    worstColony = source;
+                }
             }
-			for (int i = 0; i < comm_sz - 1; i++) {
-				cout << bestLengthArray[i] << endl;
-			}
+            // Get pheromones from the best colony and send them to the worst colony
+            short mode = 1;
+            MPI_Send(&mode, 1, MPI_SHORT, bestColony, 0, MPI_COMM_WORLD);
+            MPI_Recv(&pheromones[0][0], graphSize * graphSize, MPI_FLOAT, bestColony, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            mode = 2;
+            MPI_Send(&mode, 1, MPI_SHORT, worstColony, 0, MPI_COMM_WORLD);
+            MPI_Send(&pheromones[0][0], graphSize * graphSize, MPI_FLOAT, worstColony, 0, MPI_COMM_WORLD);
+            // Broadcast mode 0 to all colonies
+            mode = 0;
+            for (int i = 1; i < comm_sz; i++) {
+                MPI_Send(&mode, 1, MPI_SHORT, i, 0, MPI_COMM_WORLD);
+            }
         }
         return 0;
     }
 
     T_GRAPH** graphData;
-    T_PHER** pheromones;
     graphData = generateNaiveGraph(graphSize, 1.0, 6.0);
-    pheromones = generatePheromones(graphSize, 1.0);
 
     // Running the Ants
     AntPath ** antPathArrayIter = new AntPath*[ANTS_ITER];
@@ -74,9 +99,20 @@ int main() {
 
         if ((i + 1) % comm_num == 0) {
             // Send the best ant path to the master
-            AntPath best_ant_path = getBestAntPath(antPathArray, ANTS_N);
-            best_length = best_ant_path.pathLength;
-            MPI_Send(&best_length, 1, MPI_FLOAT, 0, 0, MPI_COMM_WORLD);
+            short mode = -1; // 0: continue, 1: send pheromones, 2: receive and update pheromones
+            AntPath bestAntPath = getBestAntPath(antPathArray, ANTS_N);
+            bestLength = bestAntPath.pathLength;
+            MPI_Send(&bestLength, 1, MPI_FLOAT, 0, 0, MPI_COMM_WORLD);
+            while (mode != 0) {
+                MPI_Recv(&mode, 1, MPI_SHORT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+                if (mode == 1) {
+                    // Send the pheromones to the master
+                    MPI_Send(&pheromones[0][0], graphSize * graphSize, MPI_FLOAT, 0, 0, MPI_COMM_WORLD);
+                } else if (mode == 2) {
+                    // Receive the pheromones from the master
+                    MPI_Recv(&pheromones[0][0], graphSize * graphSize, MPI_FLOAT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+                }
+            }
         }
     }
     // savePath(antPathArrayIter, "result.csv");
