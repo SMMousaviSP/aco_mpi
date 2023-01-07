@@ -74,7 +74,7 @@ int main() {
         // Saving the result of each iteration to a file
         antPathArrayIter[i] = antPathArray;
 
-        if (i + 1 % comm_num == 0) {
+        if ((i + 1) % comm_num == 0) {
             // Send the best ant path to the master
             AntPath best_ant_path = getBestAntPath(antPathArray, ANTS_N);
             MPI_Send(&best_ant_path, sizeof(AntPath), MPI_BYTE, 0, 0, MPI_COMM_WORLD);
