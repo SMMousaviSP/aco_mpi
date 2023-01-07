@@ -46,7 +46,6 @@ int main() {
 			for (int i = 0; i < comm_sz - 1; i++) {
 				cout << bestLengthArray[i] << endl;
 			}
-            MPI_Barrier(MPI_COMM_WORLD);
         }
         return 0;
     }
@@ -78,7 +77,6 @@ int main() {
             AntPath best_ant_path = getBestAntPath(antPathArray, ANTS_N);
             best_length = best_ant_path.pathLength;
             MPI_Send(&best_length, 1, MPI_FLOAT, 0, 0, MPI_COMM_WORLD);
-            MPI_Barrier(MPI_COMM_WORLD);
         }
     }
     // savePath(antPathArrayIter, "result.csv");
