@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <limits>
 
 #include "settings.h"
 #include "structs.h"
@@ -86,4 +87,16 @@ void saveMetadata(string filename, int graphSize, float exploitation, float expl
     csvFile << exploration << ",";
     csvFile << SEED << endl;
     csvFile.close();
+}
+
+
+AntPath getBestAntPath(AntPath* antPathArray, int arraySize) {
+    AntPath bestPath;
+    bestPath.pathLength = numeric_limits<T_GRAPH>::max();
+    for (int i = 0; i < arraySize; i++) {
+        if (antPathArray[i].pathLength < bestPath.pathLength) {
+            bestPath = antPathArray[i];
+        }
+    }
+    return bestPath;
 }
