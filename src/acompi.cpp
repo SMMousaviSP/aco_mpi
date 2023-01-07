@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <mpi.h>
 
 #include "settings.h"
 #include "structs.h"
@@ -16,10 +17,41 @@ const float alpha = 0.5;
 const float beta = 0.5;
 
 int main() {
+    int comm_sz;
+	int my_rank;
+    int comm_num = COMM_NUM;
 
-    srand(time(NULL));
+	MPI_Init(NULL, NULL);
+	MPI_Comm_size(MPI_COMM_WORLD, &comm_sz);
+	MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
+
+    // Check if ANTS_ITER is divisible by comm_num
+    if (ANTS_ITER % comm_num != 0) {
+        cout << "ANTS_ITER must be divisible by comm_num" << endl;
+        return 1;
+    }
 
     int graphSize = SIZE;
+    srand(time(NULL));
+
+    int best_length = 0;
+    AntPath best_ant_path;
+    if (my_rank == 0) {
+        for (int j = 0; j < comm_num; j++) {
+            for (int i = 1; i < comm_sz; i++) {
+                MPI_Recv(&best_ant_path, sizeof(AntPath), MPI_BYTE, i, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+                cout << "Received from " << i << " the path: ";
+                if (best_ant_path.pathLength < best_length) {
+                    cout << "*";
+                    best_length = best_ant_path.pathLength;
+                }
+                cout << endl;
+                printPath(best_ant_path);
+            }
+        }
+        return 0;
+    }
+
     T_GRAPH** graphData;
     T_PHER** pheromones;
     graphData = generateNaiveGraph(graphSize, 1.0, 6.0);
@@ -41,12 +73,18 @@ int main() {
 
         // Saving the result of each iteration to a file
         antPathArrayIter[i] = antPathArray;
-    }
-    savePath(antPathArrayIter, "result.csv");
-    saveMetadata("metadata.csv",SIZE, alpha, beta);
 
-    printGraph(graphData, SIZE);
-    printPheromone(pheromones, SIZE);
+        if (i + 1 % comm_num == 0) {
+            // Send the best ant path to the master
+            AntPath best_ant_path = getBestAntPath(antPathArray, ANTS_N);
+            MPI_Send(&best_ant_path, sizeof(AntPath), MPI_BYTE, 0, 0, MPI_COMM_WORLD);
+        }
+    }
+    // savePath(antPathArrayIter, "result.csv");
+    // saveMetadata("metadata.csv",SIZE, alpha, beta);
+
+    // printGraph(graphData, SIZE);
+    // printPheromone(pheromones, SIZE);
 
 
     // vector<int> neighbors = getNeighbors(2, graphData, graphSize);
