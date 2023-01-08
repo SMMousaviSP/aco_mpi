@@ -50,7 +50,7 @@ int main() {
         for (int j = 0; j < comm_num; j++) {
 
             for (int i = 1; i < comm_sz; i++) {
-                MPI_Recv(&antLength, 1, MPI_FLOAT, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+                MPI_Recv(&antLength, 1, MPI_FLOAT, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &status);
                 source = status.MPI_SOURCE;
                 if (antLength < bestLength) {
                     bestLength = antLength;
