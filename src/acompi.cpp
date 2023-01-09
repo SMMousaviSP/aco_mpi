@@ -67,7 +67,8 @@ int main() {
                     worstColony = source;
                 }
             }
-            // Get pheromones from the best colony and send them to the worst colony
+
+            // Get pheromones from the best colony
             short mode = 1;
             o = "Rank 0 sending mode 1 to best colony CN " + to_string(j) + "\n";
             cout << o;
@@ -75,17 +76,34 @@ int main() {
             o = "Rank 0 getting best pheromone from best colony CN " + to_string(j) + "\n";
             cout << o;
             MPI_Recv(&pheromones[0][0], graphSize * graphSize, MPI_FLOAT, bestColony, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-            mode = 2;
-            MPI_Send(&mode, 1, MPI_SHORT, worstColony, 0, MPI_COMM_WORLD);
-            MPI_Send(&pheromones[0][0], graphSize * graphSize, MPI_FLOAT, worstColony, 0, MPI_COMM_WORLD);
-            // Broadcast mode 0 to all colonies
+            
+            if (UPDATE_STRATEGY == "WORST") {
+                // Send pheromones only to the worst colony
+                mode = 2;
+                MPI_Send(&mode, 1, MPI_SHORT, worstColony, 0, MPI_COMM_WORLD);
+                MPI_Send(&pheromones[0][0], graphSize * graphSize, MPI_FLOAT, worstColony, 0, MPI_COMM_WORLD);
+            } else if (UPDATE_STRATEGY == "ALL") {
+                // Send pheromones to all colonies except the bestColony
+                mode = 2;
+                for (int i = 1; i < comm_sz; i++) {
+                    if (i != bestColony) {
+                        MPI_Send(&mode, 1, MPI_SHORT, i, 0, MPI_COMM_WORLD);
+                        MPI_Send(&pheromones[0][0], graphSize * graphSize, MPI_FLOAT, i, 0, MPI_COMM_WORLD);
+                    }
+                }
+            }
+
+            // Broadcast mode 0 to all colonies so they can continue
             o = "Broadcasting mode 0 to all colonies CN " + to_string(j) + "\n";
             cout << o;
             mode = 0;
             for (int i = 1; i < comm_sz; i++) {
                 MPI_Send(&mode, 1, MPI_SHORT, i, 0, MPI_COMM_WORLD);
             }
+
+            // Synchronizing all of the colonies after each communication
             MPI_Barrier(MPI_COMM_WORLD);
+        
         }
         return 0;
     }

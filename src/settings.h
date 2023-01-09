@@ -18,5 +18,6 @@
 
 // Only used in the parallel version
 #define COMM_NUM 4
+#define UPDATE_STRATEGY "ALL"
 
 #endif
