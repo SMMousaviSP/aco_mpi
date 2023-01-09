@@ -7,5 +7,4 @@
 #PBS -q short_cpuQ
 
 module load mpich-3.2
-mpirun.actual -n 10 /home/seyed.mousavi/src/aco_mpi/src/env/acompi.out
-
+mpirun.actual -n 10 /absolute/path/to/binary.out
