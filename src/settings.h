@@ -22,5 +22,9 @@
 #define UPDATE_ALL 'A'
 #define UPDATE_WORST 'W'
 #define UPDATE_STRATEGY UPDATE_ALL
+// mode, 0: continue, 1: send pheromones, 2: receive and update pheromones
+#define M_CONTINUE 0
+#define M_SEND_PHER 1
+#define M_RECV_PHER 2
 
 #endif

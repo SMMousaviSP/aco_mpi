@@ -69,7 +69,7 @@ int main() {
             }
 
             // Get pheromones from the best colony
-            char mode = 1;
+            char mode = M_SEND_PHER;
             o = "Rank 0 sending mode 1 to best colony CN " + to_string(j) + "\n";
             cout << o;
             MPI_Send(&mode, 1, MPI_CHAR, bestColony, 0, MPI_COMM_WORLD);
@@ -79,12 +79,12 @@ int main() {
             
             if (UPDATE_STRATEGY == UPDATE_WORST) {
                 // Send pheromones only to the worst colony
-                mode = 2;
+                mode = M_RECV_PHER;
                 MPI_Send(&mode, 1, MPI_CHAR, worstColony, 0, MPI_COMM_WORLD);
                 MPI_Send(&pheromones[0][0], graphSize * graphSize, MPI_FLOAT, worstColony, 0, MPI_COMM_WORLD);
             } else if (UPDATE_STRATEGY == UPDATE_ALL) {
                 // Send pheromones to all colonies except the bestColony
-                mode = 2;
+                mode = M_RECV_PHER;
                 for (int i = 1; i < comm_sz; i++) {
                     if (i != bestColony) {
                         MPI_Send(&mode, 1, MPI_CHAR, i, 0, MPI_COMM_WORLD);
@@ -96,7 +96,7 @@ int main() {
             // Broadcast mode 0 to all colonies so they can continue
             o = "Broadcasting mode 0 to all colonies CN " + to_string(j) + "\n";
             cout << o;
-            mode = 0;
+            mode = M_CONTINUE;
             for (int i = 1; i < comm_sz; i++) {
                 MPI_Send(&mode, 1, MPI_CHAR, i, 0, MPI_COMM_WORLD);
             }
@@ -136,16 +136,16 @@ int main() {
             o = "Sending best length from iteration " + to_string(i + 1) + "\n";
             cout << o;
             MPI_Send(&bestLength, 1, MPI_FLOAT, 0, 0, MPI_COMM_WORLD);
-            while (mode != 0) {
+            while (mode != M_CONTINUE) {
                 o = "Getting mode in rank " + to_string(my_rank) + " and iteration " + to_string(i + 1) + "\n";
                 cout << o;
                 MPI_Recv(&mode, 1, MPI_CHAR, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
                 o = "Received mode " + to_string(mode) + " in rank " + to_string(my_rank) + " and iteration " + to_string(i + 1) + "\n";
                 cout << o;
-                if (mode == 1) {
+                if (mode == M_SEND_PHER) {
                     // Send the pheromones to the master
                     MPI_Send(&pheromones[0][0], graphSize * graphSize, MPI_FLOAT, 0, 0, MPI_COMM_WORLD);
-                } else if (mode == 2) {
+                } else if (mode == M_RECV_PHER) {
                     // Receive the pheromones from the master
                     MPI_Recv(&pheromones[0][0], graphSize * graphSize, MPI_FLOAT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
                 }
