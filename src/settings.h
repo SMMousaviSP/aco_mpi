@@ -19,6 +19,8 @@
 // Only used in the parallel version
 #define COMM_NUM 4
 // 'W' for updating the worst colony only and 'A' for updating all.
-#define UPDATE_STRATEGY 'A'
+#define UPDATE_ALL 'A'
+#define UPDATE_WORST 'W'
+#define UPDATE_STRATEGY UPDATE_ALL
 
 #endif

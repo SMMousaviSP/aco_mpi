@@ -77,12 +77,12 @@ int main() {
             cout << o;
             MPI_Recv(&pheromones[0][0], graphSize * graphSize, MPI_FLOAT, bestColony, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
             
-            if (UPDATE_STRATEGY == 'W') {
+            if (UPDATE_STRATEGY == UPDATE_WORST) {
                 // Send pheromones only to the worst colony
                 mode = 2;
                 MPI_Send(&mode, 1, MPI_SHORT, worstColony, 0, MPI_COMM_WORLD);
                 MPI_Send(&pheromones[0][0], graphSize * graphSize, MPI_FLOAT, worstColony, 0, MPI_COMM_WORLD);
-            } else if (UPDATE_STRATEGY == 'A') {
+            } else if (UPDATE_STRATEGY == UPDATE_ALL) {
                 // Send pheromones to all colonies except the bestColony
                 mode = 2;
                 for (int i = 1; i < comm_sz; i++) {
