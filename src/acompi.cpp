@@ -105,6 +105,7 @@ int main() {
             MPI_Barrier(MPI_COMM_WORLD);
         
         }
+        saveMetadata("metadata.csv",SIZE, alpha, beta);
         return 0;
     }
 
@@ -154,7 +155,8 @@ int main() {
             
         }
     }
-    // savePath(antPathArrayIter, "result.csv");
+    string file_name = "result_" + to_string(my_rank) + ".csv";
+    savePath(antPathArrayIter, file_name);
     // saveMetadata("metadata.csv",SIZE, alpha, beta);
 
     // printGraph(graphData, SIZE);
