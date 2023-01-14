@@ -38,7 +38,7 @@ int main() {
     string o;
 
     int graphSize = SIZE;
-    srand(time(NULL));
+    srand(time(NULL) + my_rank);
 
     T_PHER** pheromones;
     pheromones = generatePheromones(graphSize, 1.0);
@@ -105,7 +105,8 @@ int main() {
             MPI_Barrier(MPI_COMM_WORLD);
         
         }
-        saveMetadata("metadata.csv",SIZE, alpha, beta);
+        saveMetadata("out/metadata.csv",SIZE, alpha, beta);
+        MPI_Barrier(MPI_COMM_WORLD);
         return 0;
     }
 
@@ -155,7 +156,7 @@ int main() {
             
         }
     }
-    string file_name = "result_" + to_string(my_rank) + ".csv";
+    string file_name = "out/result_" + to_string(my_rank) + ".csv";
     savePath(antPathArrayIter, file_name);
     // saveMetadata("metadata.csv",SIZE, alpha, beta);
 
@@ -222,7 +223,7 @@ int main() {
     //     cout << endl;
     // }
     // cout << endl;
-
+    MPI_Barrier(MPI_COMM_WORLD);
     return 0;
 }
 
