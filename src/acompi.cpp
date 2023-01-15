@@ -56,7 +56,7 @@ int main() {
             o = "-------------- CN " + to_string(j) + "\n";
             cout << o;
             for (int i = 1; i < comm_sz; i++) {
-                MPI_Recv(&antLength, 1, MPI_FLOAT, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &status);
+                MPI_Recv(&antLength, 1, MPI_T_PHER, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &status);
                 source = status.MPI_SOURCE;
                 if (antLength < bestLength) {
                     bestLength = antLength;
@@ -75,20 +75,20 @@ int main() {
             MPI_Send(&mode, 1, MPI_CHAR, bestColony, 0, MPI_COMM_WORLD);
             o = "Rank 0 getting best pheromone from best colony CN " + to_string(j) + "\n";
             cout << o;
-            MPI_Recv(&pheromones[0][0], graphSize * graphSize, MPI_FLOAT, bestColony, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            MPI_Recv(&pheromones[0][0], graphSize * graphSize, MPI_T_PHER, bestColony, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
             
             if (UPDATE_STRATEGY == UPDATE_WORST) {
                 // Send pheromones only to the worst colony
                 mode = M_RECV_PHER;
                 MPI_Send(&mode, 1, MPI_CHAR, worstColony, 0, MPI_COMM_WORLD);
-                MPI_Send(&pheromones[0][0], graphSize * graphSize, MPI_FLOAT, worstColony, 0, MPI_COMM_WORLD);
+                MPI_Send(&pheromones[0][0], graphSize * graphSize, MPI_T_PHER, worstColony, 0, MPI_COMM_WORLD);
             } else if (UPDATE_STRATEGY == UPDATE_ALL) {
                 // Send pheromones to all colonies except the bestColony
                 mode = M_RECV_PHER;
                 for (int i = 1; i < comm_sz; i++) {
                     if (i != bestColony) {
                         MPI_Send(&mode, 1, MPI_CHAR, i, 0, MPI_COMM_WORLD);
-                        MPI_Send(&pheromones[0][0], graphSize * graphSize, MPI_FLOAT, i, 0, MPI_COMM_WORLD);
+                        MPI_Send(&pheromones[0][0], graphSize * graphSize, MPI_T_PHER, i, 0, MPI_COMM_WORLD);
                     }
                 }
             }
@@ -137,7 +137,7 @@ int main() {
             bestLength = bestAntPath.pathLength;
             o = "Sending best length from iteration " + to_string(i + 1) + "\n";
             cout << o;
-            MPI_Send(&bestLength, 1, MPI_FLOAT, 0, 0, MPI_COMM_WORLD);
+            MPI_Send(&bestLength, 1, MPI_T_PHER, 0, 0, MPI_COMM_WORLD);
             while (mode != M_CONTINUE) {
                 o = "Getting mode in rank " + to_string(my_rank) + " and iteration " + to_string(i + 1) + "\n";
                 cout << o;
@@ -146,10 +146,10 @@ int main() {
                 cout << o;
                 if (mode == M_SEND_PHER) {
                     // Send the pheromones to the master
-                    MPI_Send(&pheromones[0][0], graphSize * graphSize, MPI_FLOAT, 0, 0, MPI_COMM_WORLD);
+                    MPI_Send(&pheromones[0][0], graphSize * graphSize, MPI_T_PHER, 0, 0, MPI_COMM_WORLD);
                 } else if (mode == M_RECV_PHER) {
                     // Receive the pheromones from the master
-                    MPI_Recv(&pheromones[0][0], graphSize * graphSize, MPI_FLOAT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+                    MPI_Recv(&pheromones[0][0], graphSize * graphSize, MPI_T_PHER, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
                 }
             }
             MPI_Barrier(MPI_COMM_WORLD);
@@ -231,7 +231,7 @@ int main() {
 // MPI_Datatype create_mpi_type(const AntPath& s) {
 //   int count = 2;
 //   int blocklengths[2] = {1, s.path.size()};
-//   MPI_Datatype types[2] = {MPI_FLOAT, MPI_FLOAT};
+//   MPI_Datatype types[2] = {MPI_T_PHER, MPI_T_PHER};
 //   MPI_Aint offsets[2];
 //   offsets[0] = offsetof(AntPath, pathLength);
 //   offsets[1] = offsetof(AntPath, path);

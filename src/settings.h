@@ -17,6 +17,7 @@
 #define ANTS_ITER 20 
 
 // Only used in the parallel version
+#define MPI_T_PHER MPI_FLOAT
 #define COMM_NUM 4
 // 'W' for updating the worst colony only and 'A' for updating all.
 #define UPDATE_ALL 'A'
