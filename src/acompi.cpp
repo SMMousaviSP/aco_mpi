@@ -53,6 +53,8 @@ int main() {
     if (my_rank == 0) {
         // Distributing the graph
         graphData = generateNaiveGraph(graphSize, 1.0, 6.0);
+        string graph_file_name = "out/graph_" + to_string(my_rank) + ".csv";
+        saveGraph(graphData, graphSize, graph_file_name);
         // Broadcast the graph with MPI_Bcast
         o = "Rank 0 broadcasting graph to all colonies\n";
         cout << o;
@@ -128,6 +130,8 @@ int main() {
     graphData = generateEmptyGraph(graphSize);
     // MPI_Bcast(&graphData[0][0], graphSize * graphSize, MPI_T_GRAPH, 0, MPI_COMM_WORLD);
     MPI_Recv(&graphData[0][0], graphSize * graphSize, MPI_T_GRAPH, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+    string graph_file_name = "out/graph_" + to_string(my_rank) + ".csv";
+    saveGraph(graphData, graphSize, graph_file_name);
 
     // Running the Ants
     AntPath ** antPathArrayIter = new AntPath*[ANTS_ITER];
