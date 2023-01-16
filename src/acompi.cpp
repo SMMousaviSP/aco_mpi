@@ -40,6 +40,7 @@ int main() {
     int graphSize = SIZE;
     srand(time(NULL) + my_rank);
 
+    T_GRAPH** graphData;
     T_PHER** pheromones;
     pheromones = generatePheromones(graphSize, 1.0);
 
@@ -50,6 +51,13 @@ int main() {
 
     T_GRAPH antLength;
     if (my_rank == 0) {
+        // Distributing the graph
+        graphData = generateNaiveGraph(graphSize, 1.0, 6.0);
+        // Broadcast the graph with MPI_Bcast
+        o = "Rank 0 broadcasting graph to all colonies\n";
+        cout << o;
+        MPI_Bcast(&graphData[0][0], graphSize * graphSize, MPI_T_GRAPH, 0, MPI_COMM_WORLD);
+
         MPI_Status status;
         int source;
         for (int j = 0; j < comm_num; j++) {
@@ -110,8 +118,9 @@ int main() {
         return 0;
     }
 
-    T_GRAPH** graphData;
-    graphData = generateNaiveGraph(graphSize, 1.0, 6.0);
+
+    // Receiving the broadcasted graph from rank 0
+    MPI_Bcast(&graphData[0][0], graphSize * graphSize, MPI_T_GRAPH, 0, MPI_COMM_WORLD);
 
     // Running the Ants
     AntPath ** antPathArrayIter = new AntPath*[ANTS_ITER];
