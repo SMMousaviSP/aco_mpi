@@ -39,6 +39,18 @@ T_GRAPH ** generateNaiveGraph(int size, T_GRAPH min, T_GRAPH max) {
 }
 
 
+T_GRAPH ** generateEmptyGraph(int size) {
+    T_GRAPH ** graph = new T_GRAPH*[size];
+    for (int i = 0; i < size; i++) {
+        graph[i] = new T_GRAPH[size];
+        for (int j = 0; j < size; j++) {
+            graph[i][j] = 0.0;
+        }
+    }
+    return graph;
+}
+
+
 /**
  * @brief Generate pheromones matrix
  * 

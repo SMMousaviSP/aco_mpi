@@ -125,10 +125,7 @@ int main() {
 
 
     // Receiving the broadcasted graph from rank 0
-    graphData = new T_GRAPH*[graphSize];
-    for (int i = 0; i < graphSize; i++) {
-        graphData[i] = new T_GRAPH[graphSize];
-    }
+    graphData = generateEmptyGraph(graphSize);
     // MPI_Bcast(&graphData[0][0], graphSize * graphSize, MPI_T_GRAPH, 0, MPI_COMM_WORLD);
     MPI_Recv(&graphData[0][0], graphSize * graphSize, MPI_T_GRAPH, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
