@@ -56,7 +56,12 @@ int main() {
         // Broadcast the graph with MPI_Bcast
         o = "Rank 0 broadcasting graph to all colonies\n";
         cout << o;
-        MPI_Bcast(&graphData[0][0], graphSize * graphSize, MPI_T_GRAPH, 0, MPI_COMM_WORLD);
+        // MPI_Bcast(&graphData[0][0], graphSize * graphSize, MPI_T_GRAPH, 0, MPI_COMM_WORLD);
+        for (int i = 1; i < comm_sz; i++) {
+            o = "Rank 0 sending graph to colony CN " + to_string(i) + "\n";
+            cout << o;
+            MPI_Send(&graphData[0][0], graphSize * graphSize, MPI_T_GRAPH, i, 0, MPI_COMM_WORLD);
+        }
 
         MPI_Status status;
         int source;
@@ -124,7 +129,8 @@ int main() {
     for (int i = 0; i < graphSize; i++) {
         graphData[i] = new T_GRAPH[graphSize];
     }
-    MPI_Bcast(&graphData[0][0], graphSize * graphSize, MPI_T_GRAPH, 0, MPI_COMM_WORLD);
+    // MPI_Bcast(&graphData[0][0], graphSize * graphSize, MPI_T_GRAPH, 0, MPI_COMM_WORLD);
+    MPI_Recv(&graphData[0][0], graphSize * graphSize, MPI_T_GRAPH, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
     // Running the Ants
     AntPath ** antPathArrayIter = new AntPath*[ANTS_ITER];
