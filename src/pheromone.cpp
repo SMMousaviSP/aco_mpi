@@ -23,7 +23,7 @@
  * @param pheromones    pheromone metrices
  * @param graphSize     size of the graph
  */
-void depositAntPheromone(AntPath antPath, T_PHER** pheromones, int graphSize) {
+void depositAntPheromone(AntPath antPath, T_PHER* pheromones, int graphSize) {
     // if the ant didn't visit all the nodes, return (eliminating the ant)
     if (antPath.path.size() != graphSize + 1) {
         return;
@@ -37,7 +37,7 @@ void depositAntPheromone(AntPath antPath, T_PHER** pheromones, int graphSize) {
         // calculate delta
         T_PHER pheromoneTrace = PHER_CONST / antPath.pathLength;
         // update pheromones
-        pheromones[currentNode][nextNode] += pheromoneTrace;
+        pheromones[INDEX(currentNode, nextNode)] += pheromoneTrace;
     }
 }
 
@@ -50,10 +50,10 @@ void depositAntPheromone(AntPath antPath, T_PHER** pheromones, int graphSize) {
  * @param pheromones    matrix of pheromones
  * @param graphSize     size of 'pheromones' matrix
  */
-void evaporatePheromones(T_PHER** pheromones, int graphSize) {
+void evaporatePheromones(T_PHER* pheromones, int graphSize) {
     for (int i = 0; i < graphSize; i++) {
         for (int j = 0; j < graphSize; j++) {
-            pheromones[i][j] = (1 - EVAP_RATE) * pheromones[i][j];
+            pheromones[INDEX(i, j)] = (1 - EVAP_RATE) * pheromones[INDEX(i, j)];
         }
     }
 }

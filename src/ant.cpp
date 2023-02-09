@@ -8,11 +8,11 @@
 using namespace std;
 
 
-AntPath antRun(int, T_GRAPH**, int, T_PHER**, float, float);
+AntPath antRun(int, T_GRAPH*, int, T_PHER*, float, float);
 double staticProb(T_GRAPH);
-vector<int> getNeighbors(int, T_GRAPH**, int);
+vector<int> getNeighbors(int, T_GRAPH*, int);
 vector<int> eliminateAlreadyVisitedNeighbors(vector<int>, vector<int>);
-unordered_map<int, double> calculateProbability(int, T_GRAPH**, int, T_PHER**, vector<int>, float, float);
+unordered_map<int, double> calculateProbability(int, T_GRAPH*, int, T_PHER*, vector<int>, float, float);
 int chooseNextNode(unordered_map<int, double>);
 
 
@@ -29,7 +29,7 @@ int chooseNextNode(unordered_map<int, double>);
  * @param exploration    exploration factor
  * @return antPath       path and path length that the ant traveled
  */
-AntPath antRun(int node, T_GRAPH** graph, int graphSize, T_PHER** pheromones, float exploitation, float exploration) {
+AntPath antRun(int node, T_GRAPH* graph, int graphSize, T_PHER* pheromones, float exploitation, float exploration) {
     vector<int> alreadyVisited;
     alreadyVisited.push_back(node);
     AntPath antPath;
@@ -43,12 +43,12 @@ AntPath antRun(int node, T_GRAPH** graph, int graphSize, T_PHER** pheromones, fl
         nextNode = chooseNextNode(probabilities);
         antPath.path.push_back(nextNode);
         alreadyVisited.push_back(nextNode);
-        antPath.pathLength += graph[currentNode][nextNode];
+        antPath.pathLength += graph[INDEX(currentNode, nextNode)];
         currentNode = nextNode;
     }
     // Check if the last edge to return back to the initial node exists (for not fully connected graphs)
-    if (graph[currentNode][node] != NULL_TIE) {
-        antPath.pathLength += graph[currentNode][node];
+    if (graph[INDEX(currentNode, node)] != NULL_TIE) {
+        antPath.pathLength += graph[INDEX(currentNode, node)];
         antPath.path.push_back(node);
     }
     return antPath;
@@ -78,10 +78,10 @@ double staticProb(T_GRAPH tie) {
  * @param graphSize     size of the graph
  * @return vector<int>  the neighbors of "node"
  */
-vector<int> getNeighbors(int node, T_GRAPH** graphData, int graphSize) {
+vector<int> getNeighbors(int node, T_GRAPH* graphData, int graphSize) {
     vector<int> neighbors;
     for (int i = 0; i < graphSize; i++) {
-        if (graphData[node][i] != NULL_TIE) {
+        if (graphData[INDEX(node, i)] != NULL_TIE) {
             neighbors.push_back(i);
         }
     }
@@ -119,14 +119,14 @@ vector<int> eliminateAlreadyVisitedNeighbors(vector<int> neighbors, vector<int> 
  * @param exploration                   exploration factor
  * @return unordered_map<int, double>   probabilities of choosing a neighbor node as next node
  */
-unordered_map<int, double> calculateProbability(int node, T_GRAPH** graph, int graphSize, T_PHER** pheromones, vector<int> alreadyVisited, float exploitation, float exploration) {
+unordered_map<int, double> calculateProbability(int node, T_GRAPH* graph, int graphSize, T_PHER* pheromones, vector<int> alreadyVisited, float exploitation, float exploration) {
     vector<int> neighbors = getNeighbors(node, graph, graphSize);
     vector<int> validNeighbors = eliminateAlreadyVisitedNeighbors(neighbors, alreadyVisited);
     double denominator = 0;
     // for element in validNeighbors calculate probability and store in map
     unordered_map<int, double> probabilities;
     for (int i = 0; i < validNeighbors.size(); i++) {
-        double probability = pow(pheromones[node][validNeighbors[i]], exploitation) * pow(staticProb(graph[node][validNeighbors[i]]), exploration);
+        double probability = pow(pheromones[INDEX(node, validNeighbors[i])], exploitation) * pow(staticProb(graph[INDEX(node, validNeighbors[i])]), exploration);
         denominator += probability;
         probabilities[validNeighbors[i]] = probability;
     }

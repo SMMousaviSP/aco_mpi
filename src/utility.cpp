@@ -8,11 +8,11 @@
 using namespace std;
 
 
-void printGraph(T_GRAPH** graphData, int graphSize) {
+void printGraph(T_GRAPH* graphData, int graphSize) {
     cout << "graph: " << endl;
     for (int i = 0; i < graphSize; i++) {
         for (int j = 0; j < graphSize; j++) {
-            cout << graphData[i][j] << " ";
+            cout << graphData[INDEX(i, j)] << " ";
         }
         cout << endl;
     }
@@ -20,7 +20,7 @@ void printGraph(T_GRAPH** graphData, int graphSize) {
 }
 
 // save the graph in a file
-void saveGraph(T_GRAPH** graphData, int graphSize, string filename) {
+void saveGraph(T_GRAPH* graphData, int graphSize, string filename) {
     ofstream csvFile;
     csvFile.open(filename);
     // Printing the header
@@ -32,18 +32,18 @@ void saveGraph(T_GRAPH** graphData, int graphSize, string filename) {
             // Printing the number of the ant
             csvFile << j << ",";
             // printing the path length
-            csvFile << graphData[i][j] << endl;
+            csvFile << graphData[INDEX(i, j)] << endl;
         }
     }
     csvFile.close();
 }
 
 
-void printPheromone(T_PHER** pheromones, int graphSize) {
+void printPheromone(T_PHER* pheromones, int graphSize) {
     cout << "pheromones: " << endl;
     for (int i = 0; i < graphSize; i++) {
         for (int j = 0; j < graphSize; j++) {
-            cout << pheromones[i][j] << " ";
+            cout << pheromones[INDEX(i, j)] << " ";
         }
         cout << endl;
     }

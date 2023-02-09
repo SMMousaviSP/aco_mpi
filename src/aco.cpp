@@ -20,8 +20,8 @@ int main() {
     srand(time(NULL));
 
     int graphSize = SIZE;
-    T_GRAPH** graphData;
-    T_PHER** pheromones;
+    T_GRAPH* graphData;
+    T_PHER* pheromones;
     graphData = generateNaiveGraph(graphSize, 1.0, 6.0);
     pheromones = generatePheromones(graphSize, 1.0);
 

@@ -16,21 +16,20 @@
  * @param seed      random generation
  * @return T_GRAPH**  adjacency matrix
  */
-T_GRAPH ** generateNaiveGraph(int size, T_GRAPH min, T_GRAPH max) {
+T_GRAPH * generateNaiveGraph(int size, T_GRAPH min, T_GRAPH max) {
 
     // Throw an exception if min is greater than max
     if (min > max) {
         throw std::invalid_argument("min is greater than max");
     }
 
-    T_GRAPH ** graph = new T_GRAPH*[size];
+    T_GRAPH * graph = new T_GRAPH[size * size];
     for (int i = 0; i < size; i++) {
-        graph[i] = new T_GRAPH[size];
         for (int j = 0; j < size; j++) {
             if (i == j) {
-                graph[i][j] = NULL_TIE;
+                graph[INDEX(i, j)] = NULL_TIE;
             } else {
-                graph[i][j] = (((T_GRAPH)rand() / (T_GRAPH)(RAND_MAX)) * (max - min)) + min;
+                graph[INDEX(i, j)] = (((T_GRAPH)rand() / (T_GRAPH)(RAND_MAX)) * (max - min)) + min;
             }
         }
     }
@@ -39,12 +38,11 @@ T_GRAPH ** generateNaiveGraph(int size, T_GRAPH min, T_GRAPH max) {
 }
 
 
-T_GRAPH ** generateEmptyGraph(int size) {
-    T_GRAPH ** graph = new T_GRAPH*[size];
+T_GRAPH * generateEmptyGraph(int size) {
+    T_GRAPH * graph = new T_GRAPH[size * size];
     for (int i = 0; i < size; i++) {
-        graph[i] = new T_GRAPH[size];
         for (int j = 0; j < size; j++) {
-            graph[i][j] = 0.0;
+            graph[INDEX(i, j)] = 0.0;
         }
     }
     return graph;
@@ -58,12 +56,11 @@ T_GRAPH ** generateEmptyGraph(int size) {
  * @param initValue  initial value of the pheromones
  * @return T_PHER**  adjacency matrix
  */
-T_PHER ** generatePheromones(int size, T_PHER initValue) {
-    T_PHER ** pheromones = new T_PHER*[size];
+T_PHER * generatePheromones(int size, T_PHER initValue) {
+    T_PHER * pheromones = new T_PHER[size * size];
     for (int i = 0; i < size; i++) {
-        pheromones[i] = new T_PHER[size];
         for (int j = 0; j < size; j++) {
-            pheromones[i][j] = initValue;
+            pheromones[INDEX(i, j)] = initValue;
         }
     }
     return pheromones;

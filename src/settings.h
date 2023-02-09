@@ -1,6 +1,8 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
+#define SIZE 5
+#define INDEX(i, j) (i * SIZE + j)
 #define NULL_TIE -1
 #define T_PHER float
 #define T_GRAPH float
