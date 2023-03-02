@@ -31,4 +31,6 @@
 #define M_SEND_PHER 1
 #define M_RECV_PHER 2
 
+#define OUT_DIR string("out")
+
 #endif

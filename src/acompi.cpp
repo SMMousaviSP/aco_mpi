@@ -50,9 +50,12 @@ int main() {
 
     T_GRAPH antLength;
     if (my_rank == 0) {
+        // Create the output directory
+        createDirectoryInHome(OUT_DIR);
+
         // Distributing the graph
         graphData = generateNaiveGraph(graphSize, 1.0, 6.0);
-        string graph_file_name = "out/graph_" + to_string(my_rank) + ".csv";
+        string graph_file_name = OUT_DIR + "/graph_" + to_string(my_rank) + ".csv";
         saveGraph(graphData, graphSize, graph_file_name);
         // Broadcast the graph with MPI_Bcast
         o = "Rank 0 broadcasting graph to all colonies\n";
@@ -119,7 +122,7 @@ int main() {
             MPI_Barrier(MPI_COMM_WORLD);
         
         }
-        saveMetadata("out/metadata.csv",SIZE, alpha, beta);
+        saveMetadata(OUT_DIR + "/metadata.csv",SIZE, alpha, beta);
         MPI_Barrier(MPI_COMM_WORLD);
         return 0;
     }
@@ -129,7 +132,7 @@ int main() {
     graphData = generateEmptyGraph(graphSize);
     // MPI_Bcast(&graphData[0][0], graphSize * graphSize, MPI_T_GRAPH, 0, MPI_COMM_WORLD);
     MPI_Recv(&graphData[0], graphSize * graphSize, MPI_T_GRAPH, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-    string graph_file_name = "out/graph_" + to_string(my_rank) + ".csv";
+    string graph_file_name = OUT_DIR + "/graph_" + to_string(my_rank) + ".csv";
     saveGraph(graphData, graphSize, graph_file_name);
 
     // Running the Ants
@@ -175,7 +178,7 @@ int main() {
             
         }
     }
-    string file_name = "out/result_" + to_string(my_rank) + ".csv";
+    string file_name = OUT_DIR + "/result_" + to_string(my_rank) + ".csv";
     savePath(antPathArrayIter, file_name);
 
     MPI_Barrier(MPI_COMM_WORLD);
