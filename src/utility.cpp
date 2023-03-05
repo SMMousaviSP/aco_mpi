@@ -3,6 +3,9 @@
 #include <limits>
 #include <cstdlib>
 #include <filesystem>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 #include "settings.h"
 #include "structs.h"
@@ -123,15 +126,15 @@ AntPath getBestAntPath(AntPath* antPathArray, int arraySize) {
 }
 
 
-void createDirectoryInHome(string dir_name) {
-    const char* home_dir = getenv("HOME");
-    string output_dir = string(home_dir) + "/" + dir_name;
-    filesystem::path dir(output_dir);
-    if (!filesystem::exists(dir)) {
-        if (filesystem::create_directory(dir)) {
-            cout << "Output directory created: " << output_dir << endl;
-        } else {
-            cerr << "Failed to create output directory: " << output_dir << endl;
-        }
+void createDirectoryInHome(string folderName) {
+    string homeDir = getenv("HOME");
+    string folderPath = homeDir + "/" + folderName;
+
+    struct stat st;
+    if (stat(folderPath.c_str(), &st) == -1) {
+        mkdir(folderPath.c_str(), 0700);
+        cout << "Folder created successfully!" << endl;
+    } else {
+        cout << "Folder already exists." << endl;
     }
 }
