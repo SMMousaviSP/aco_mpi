@@ -94,11 +94,11 @@ void savePath(AntPath** antPathArrayIter, string filename) {
 }
 
 
-void saveMetadata(string filename, int graphSize, float exploitation, float exploration) {
+void saveMetadata(string filename, int graphSize, float exploitation, float exploration, double elapsedTime) {
     ofstream csvFile;
     csvFile.open(filename);
     // Printing the header
-    csvFile << "graphSize,antsNumber,antsIterations,evaporationRate,kConstant,pheromoneConstant,exploitation,exploration,seed" << endl;
+    csvFile << "graphSize,antsNumber,antsIterations,evaporationRate,kConstant,pheromoneConstant,exploitation,exploration,seed,elapsedTime" << endl;
     // Printing the metadata
     csvFile << graphSize << ",";
     csvFile << ANTS_N << ",";
@@ -108,7 +108,8 @@ void saveMetadata(string filename, int graphSize, float exploitation, float expl
     csvFile << PHER_CONST << ",";
     csvFile << exploitation << ",";
     csvFile << exploration << ",";
-    csvFile << SEED << endl;
+    csvFile << SEED << ",";
+    csvFile << elapsedTime << endl;
     csvFile.close();
 }
 

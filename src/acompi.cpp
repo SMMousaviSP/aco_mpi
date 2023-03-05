@@ -53,6 +53,8 @@ int main() {
         // Create the output directory
         createDirectoryInHome(OUT_DIR);
 
+        double start_time = MPI_Wtime();
+
         // Distributing the graph
         graphData = generateNaiveGraph(graphSize, 1.0, 6.0);
         string graph_file_name = OUT_DIR + "/graph_" + to_string(my_rank) + ".csv";
@@ -122,7 +124,11 @@ int main() {
             MPI_Barrier(MPI_COMM_WORLD);
         
         }
-        saveMetadata(OUT_DIR + "/metadata.csv",SIZE, alpha, beta);
+
+        double end_time = MPI_Wtime();
+        double elapsed_time = end_time - start_time;
+
+        saveMetadata(OUT_DIR + "/metadata.csv",SIZE, alpha, beta, elapsed_time);
         MPI_Barrier(MPI_COMM_WORLD);
         return 0;
     }
