@@ -1,7 +1,7 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
-#define SIZE 5
+#define SIZE 200
 #define INDEX(i, j) (i * SIZE + j)
 #define NULL_TIE -1
 #define T_PHER float
@@ -13,15 +13,17 @@
 #define EVAP_RATE 0.1
 #define K_CONST 0.4
 #define PHER_CONST 0.4
+#define ALPHA 0.9
+#define BETA 0.1
 #define SEED 0
 
-#define ANTS_N 5
-#define ANTS_ITER 20 
+#define ANTS_N 8
+#define ANTS_ITER 100 
 
 // Only used in the parallel version
 #define MPI_T_PHER MPI_FLOAT
 #define MPI_T_GRAPH MPI_FLOAT
-#define COMM_NUM 4
+#define COMM_NUM 10
 // 'W' for updating the worst colony only and 'A' for updating all.
 #define UPDATE_ALL 'A'
 #define UPDATE_WORST 'W'
