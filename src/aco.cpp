@@ -10,10 +10,9 @@
 
 using namespace std;
 
-#define SIZE 5
 
-const float alpha = 0.5;
-const float beta = 0.5;
+const float alpha = ALPHA;
+const float beta = BETA;
 
 int main() {
 
