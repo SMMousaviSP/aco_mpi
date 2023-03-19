@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <chrono>
 
 #include "settings.h"
 #include "structs.h"
@@ -17,6 +18,8 @@ const float beta = BETA;
 int main() {
 
     srand(time(NULL));
+
+	std::chrono::time_point<std::chrono::high_resolution_clock> start_time = std::chrono::high_resolution_clock::now();
 
     int graphSize = SIZE;
     T_GRAPH* graphData;
@@ -41,8 +44,12 @@ int main() {
         // Saving the result of each iteration to a file
         antPathArrayIter[i] = antPathArray;
     }
+
+	std::chrono::time_point<std::chrono::high_resolution_clock> end_time = std::chrono::high_resolution_clock::now();
+	std::chrono::milliseconds elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+
     savePath(antPathArrayIter, "result.csv");
-    saveMetadata("metadata.csv",SIZE, alpha, beta);
+    saveMetadata("metadata.csv",SIZE, alpha, beta, elapsed_time.count());
 
     printGraph(graphData, SIZE);
     printPheromone(pheromones, SIZE);
