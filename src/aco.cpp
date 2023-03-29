@@ -24,7 +24,7 @@ int main() {
     int graphSize = SIZE;
     T_GRAPH* graphData;
     T_PHER* pheromones;
-    graphData = generateNaiveGraph(graphSize, 1.0, 6.0);
+    graphData = generateNaiveGraph(graphSize, GRAPH_MIN, GRAPH_MAX);
     pheromones = generatePheromones(graphSize, 1.0);
 
     // Running the Ants

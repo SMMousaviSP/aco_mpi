@@ -56,7 +56,7 @@ int main() {
         double start_time = MPI_Wtime();
 
         // Distributing the graph
-        graphData = generateNaiveGraph(graphSize, 1.0, 6.0);
+        graphData = generateNaiveGraph(graphSize, GRAPH_MIN, GRAPH_MAX);
         string graph_file_name = OUT_DIR + "/graph_" + to_string(my_rank) + ".csv";
         saveGraph(graphData, graphSize, graph_file_name);
         // Broadcast the graph with MPI_Bcast

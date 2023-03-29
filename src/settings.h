@@ -6,6 +6,8 @@
 #define NULL_TIE -1
 #define T_PHER float
 #define T_GRAPH float
+#define GRAPH_MIN 1.0
+#define GRAPH_MAX 20.0
 
 // parameters for ant colony tuning
 // default values if others are not specified
@@ -18,7 +20,7 @@
 #define SEED 0
 
 #define ANTS_N 8
-#define ANTS_ITER 100 
+#define ANTS_ITER 100
 
 // Only used in the parallel version
 #define MPI_T_PHER MPI_FLOAT
