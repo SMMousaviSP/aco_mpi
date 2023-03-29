@@ -95,11 +95,17 @@ int main() {
             o = "Rank 0 getting best pheromone from best colony CN " + to_string(j) + "\n";
             cout << o;
             MPI_Recv(&pheromones[0], graphSize * graphSize, MPI_T_PHER, bestColony, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            // TEMP
+            saveGraph(pheromones, SIZE, "pherRecvFromBest" + to_string(bestColony) + "_comm" + to_string(j) + ".csv");
+
+
             
             if (UPDATE_STRATEGY == UPDATE_WORST) {
                 // Send pheromones only to the worst colony
                 mode = M_RECV_PHER;
                 MPI_Send(&mode, 1, MPI_CHAR, worstColony, 0, MPI_COMM_WORLD);
+                // TEMP
+                saveGraph(pheromones, SIZE, "pherSendToWorst" + to_string(worstColony) + "_comm" + to_string(j) + ".csv");
                 MPI_Send(&pheromones[0], graphSize * graphSize, MPI_T_PHER, worstColony, 0, MPI_COMM_WORLD);
             } else if (UPDATE_STRATEGY == UPDATE_ALL) {
                 // Send pheromones to all colonies except the bestColony
@@ -107,6 +113,8 @@ int main() {
                 for (int i = 1; i < comm_sz; i++) {
                     if (i != bestColony) {
                         MPI_Send(&mode, 1, MPI_CHAR, i, 0, MPI_COMM_WORLD);
+                        // TEMP
+                        saveGraph(pheromones, SIZE, "pherSendToOthers" + to_string(i) + "_comm" + to_string(j) + ".csv");
                         MPI_Send(&pheromones[0], graphSize * graphSize, MPI_T_PHER, i, 0, MPI_COMM_WORLD);
                     }
                 }
@@ -128,7 +136,7 @@ int main() {
         double end_time = MPI_Wtime();
         double elapsed_time = end_time - start_time;
 
-        saveMetadata(OUT_DIR + "/metadata.csv",SIZE, alpha, beta, elapsed_time);
+        saveMetadata(OUT_DIR + "/metadata.csv", SIZE, alpha, beta, elapsed_time);
         MPI_Barrier(MPI_COMM_WORLD);
         return 0;
     }
@@ -174,10 +182,14 @@ int main() {
                 cout << o;
                 if (mode == M_SEND_PHER) {
                     // Send the pheromones to the master
+                    // TEMP
+                    saveGraph(pheromones, SIZE, "pherSendToMaster" + to_string(my_rank) + "_iter" + to_string(i + 1) + ".csv");
                     MPI_Send(&pheromones[0], graphSize * graphSize, MPI_T_PHER, 0, 0, MPI_COMM_WORLD);
                 } else if (mode == M_RECV_PHER) {
                     // Receive the pheromones from the master
                     MPI_Recv(&pheromones[0], graphSize * graphSize, MPI_T_PHER, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+                    // TEMP
+                    saveGraph(pheromones, SIZE, "pherRecvFromMaster" + to_string(my_rank) + "_iter" + to_string(i + 1) + ".csv");
                 }
             }
             MPI_Barrier(MPI_COMM_WORLD);
