@@ -77,6 +77,8 @@ int main() {
             for (int i = 1; i < comm_sz; i++) {
                 MPI_Recv(&antLength, 1, MPI_T_PHER, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &status);
                 source = status.MPI_SOURCE;
+                o = "Rank 0 received antLength " + to_string(antLength) + " from colony " + to_string(source) + "\n";
+                cout << o;
                 if (antLength < bestLength) {
                     bestLength = antLength;
                     bestColony = source;
@@ -89,7 +91,7 @@ int main() {
 
             // Get pheromones from the best colony
             char mode = M_SEND_PHER;
-            o = "Rank 0 sending mode 1 to best colony CN " + to_string(j) + "\n";
+            o = "Rank 0 sending mode 1 to best colony" + to_string(bestColony) + " CN " + to_string(j) + "\n";
             cout << o;
             MPI_Send(&mode, 1, MPI_CHAR, bestColony, 0, MPI_COMM_WORLD);
             o = "Rank 0 getting best pheromone from best colony CN " + to_string(j) + "\n";
