@@ -43,8 +43,8 @@ int main() {
     T_PHER* pheromones;
     pheromones = generatePheromones(graphSize, 1.0);
 
-    int bestLength = numeric_limits<T_GRAPH>::max();
-    int worstLength = -1;
+    T_GRAPH bestLength = numeric_limits<T_GRAPH>::max();
+    T_GRAPH worstLength = -1;
     int bestColony = -1;
     int worstColony = -1;
 
