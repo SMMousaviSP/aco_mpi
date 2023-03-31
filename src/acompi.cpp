@@ -171,8 +171,7 @@ int main() {
         if ((i + 1) % comm_per_iter == 0) {
             // Send the best ant path to the master
             char mode = -1; // 0: continue, 1: send pheromones, 2: receive and update pheromones
-            AntPath bestAntPath = getBestAntPath(antPathArray, ANTS_N);
-            bestLength = bestAntPath.pathLength;
+            T_GRAPH bestLength = getBestAntPath(antPathArray, ANTS_N);
             o = "Sending best length from iteration " + to_string(i + 1) + "\n";
             cout << o;
             MPI_Send(&bestLength, 1, MPI_T_PHER, 0, 0, MPI_COMM_WORLD);

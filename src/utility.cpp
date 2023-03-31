@@ -114,15 +114,12 @@ void saveMetadata(string filename, int graphSize, float exploitation, float expl
 }
 
 
-AntPath getBestAntPath(AntPath* antPathArray, int arraySize) {
-    AntPath bestPath;
-    bestPath.pathLength = numeric_limits<T_GRAPH>::max();
+T_GRAPH getBestAntPath(AntPath* antPathArray, int arraySize) {
+    T_GRAPH sum_length;
     for (int i = 0; i < arraySize; i++) {
-        if (antPathArray[i].pathLength < bestPath.pathLength) {
-            bestPath = antPathArray[i];
-        }
+        sum_length = antPathArray[i].pathLength;
     }
-    return bestPath;
+    return sum_length / arraySize;
 }
 
 
