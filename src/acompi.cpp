@@ -43,11 +43,6 @@ int main() {
     T_PHER* pheromones;
     pheromones = generatePheromones(graphSize, 1.0);
 
-    T_GRAPH bestLength = numeric_limits<T_GRAPH>::max();
-    T_GRAPH worstLength = -1;
-    int bestColony = -1;
-    int worstColony = -1;
-
     T_GRAPH antLength;
     if (my_rank == 0) {
         // Create the output directory
@@ -73,6 +68,10 @@ int main() {
         int source;
         for (int j = 0; j < comm_num; j++) {
             o = "-------------- CN " + to_string(j) + "\n";
+            T_GRAPH bestLength = numeric_limits<T_GRAPH>::max();
+            T_GRAPH worstLength = -1;
+            int bestColony = -1;
+            int worstColony = -1;
             cout << o;
             for (int i = 1; i < comm_sz; i++) {
                 MPI_Recv(&antLength, 1, MPI_T_PHER, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &status);
@@ -153,6 +152,7 @@ int main() {
 
     // Running the Ants
     AntPath ** antPathArrayIter = new AntPath*[ANTS_ITER];
+    T_GRAPH bestLength = numeric_limits<T_GRAPH>::max();
     for (int i = 0; i < ANTS_ITER; i++) {
         AntPath * antPathArray = new AntPath[ANTS_N];
         for (int j = 0; j < ANTS_N; j++) {
