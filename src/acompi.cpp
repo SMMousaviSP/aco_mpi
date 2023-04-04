@@ -155,6 +155,7 @@ int main() {
     T_GRAPH bestLength = numeric_limits<T_GRAPH>::max();
     for (int i = 0; i < ANTS_ITER; i++) {
         AntPath * antPathArray = new AntPath[ANTS_N];
+        #pragma omp parallel for
         for (int j = 0; j < ANTS_N; j++) {
             // Choose a random starting node from 0 to SIZE
             int startingNode = rand() % SIZE;
