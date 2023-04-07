@@ -3,6 +3,9 @@
 #include <mpi.h>
 #include <limits>
 #include <string>
+#ifdef _OPENMP
+#include <omp.h>
+#endif
 
 #include "settings.h"
 #include "structs.h"
