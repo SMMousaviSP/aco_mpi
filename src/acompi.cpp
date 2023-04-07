@@ -17,7 +17,7 @@ using namespace std;
 const float alpha = ALPHA;
 const float beta = BETA;
 
-int main() {
+int main(int argc, char* argv[]) {
     int comm_sz;
     int my_rank;
     int comm_num = COMM_NUM;
@@ -25,6 +25,16 @@ int main() {
     MPI_Init(NULL, NULL);
     MPI_Comm_size(MPI_COMM_WORLD, &comm_sz);
     MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
+
+	try {
+		if (argc != 2) {
+			throw runtime_error("Invalid number of arguments. Enter exactly one integer\
+					             for indicating the number of threads for OpenMP.");
+			int thread_count = atoi(argv[1]);
+		} catch (exception& e) {
+			cerr << "Error: " << e.what() << endl;
+			return 1;
+		}
 
     // Check if ANTS_ITER is divisible by comm_num
     if (ANTS_ITER % comm_num != 0) {
@@ -155,7 +165,7 @@ int main() {
     T_GRAPH bestLength = numeric_limits<T_GRAPH>::max();
     for (int i = 0; i < ANTS_ITER; i++) {
         AntPath * antPathArray = new AntPath[ANTS_N];
-        #pragma omp parallel for
+        #pragma omp parallel for num_threads(thread_count)
         for (int j = 0; j < ANTS_N; j++) {
             // Choose a random starting node from 0 to SIZE
             int startingNode = rand() % SIZE;
