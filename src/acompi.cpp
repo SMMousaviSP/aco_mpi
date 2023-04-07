@@ -26,15 +26,17 @@ int main(int argc, char* argv[]) {
     MPI_Comm_size(MPI_COMM_WORLD, &comm_sz);
     MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
 
+    // Get thread count from command line
 	try {
 		if (argc != 2) {
 			throw runtime_error("Invalid number of arguments. Enter exactly one integer\
 					             for indicating the number of threads for OpenMP.");
 			int thread_count = atoi(argv[1]);
-		} catch (exception& e) {
-			cerr << "Error: " << e.what() << endl;
-			return 1;
 		}
+    } catch (exception& e) {
+        cerr << "Error: " << e.what() << endl;
+        return 1;
+    }
 
     // Check if ANTS_ITER is divisible by comm_num
     if (ANTS_ITER % comm_num != 0) {
