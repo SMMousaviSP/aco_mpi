@@ -31,12 +31,15 @@ int main(int argc, char* argv[]) {
 
     // Get thread count from command line
     int thread_count;
+    string foldername;
 	try {
-		if (argc != 2) {
+		if (argc != 3) {
 			throw runtime_error("Invalid number of arguments. Enter exactly one integer\
-					             for indicating the number of threads for OpenMP.");
+					             for indicating the number of threads for OpenMP and one string\
+                                 for indicating the folder name for output.");
 		}
 		thread_count = atoi(argv[1]);
+        foldername = argv[2];
     } catch (exception& e) {
         cerr << "Error: " << e.what() << endl;
         return 1;
@@ -62,7 +65,7 @@ int main(int argc, char* argv[]) {
     T_GRAPH antLength;
     if (my_rank == 0) {
         // Create the output directory
-        createDirectoryInHome(OUT_DIR);
+        createDirectoryInHome(foldername);
 
         double start_time = MPI_Wtime();
 
