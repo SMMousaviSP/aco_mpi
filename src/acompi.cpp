@@ -31,7 +31,7 @@ int main(int argc, char* argv[]) {
 
     // Get thread count from command line
     int thread_count;
-    string foldername;
+    string out_dir;
 	try {
 		if (argc != 3) {
 			throw runtime_error("Invalid number of arguments. Enter exactly one integer\
@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
                                  for indicating the folder name for output.");
 		}
 		thread_count = atoi(argv[1]);
-        foldername = argv[2];
+        out_dir = argv[2];
     } catch (exception& e) {
         cerr << "Error: " << e.what() << endl;
         return 1;
@@ -65,7 +65,7 @@ int main(int argc, char* argv[]) {
     T_GRAPH antLength;
     if (my_rank == 0) {
         // Create the output directory
-        createDirectoryInHome(foldername);
+        createDirectoryInHome(out_dir);
 
         double start_time = MPI_Wtime();
 
@@ -154,7 +154,7 @@ int main(int argc, char* argv[]) {
         double end_time = MPI_Wtime();
         double elapsed_time = end_time - start_time;
 
-        saveMetadata(OUT_DIR + "/metadata.csv", SIZE, alpha, beta, elapsed_time);
+        saveMetadata(out_dir + "/metadata.csv", SIZE, alpha, beta, elapsed_time);
         MPI_Barrier(MPI_COMM_WORLD);
         return 0;
     }
@@ -213,7 +213,7 @@ int main(int argc, char* argv[]) {
             
         }
     }
-    string file_name = OUT_DIR + "/result_" + to_string(my_rank) + ".csv";
+    string file_name = out_dir + "/result_" + to_string(my_rank) + ".csv";
     savePath(antPathArrayIter, file_name);
 
     MPI_Barrier(MPI_COMM_WORLD);
