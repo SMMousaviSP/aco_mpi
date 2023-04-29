@@ -130,8 +130,5 @@ void createDirectoryInHome(string folderName) {
     struct stat st;
     if (stat(folderPath.c_str(), &st) == -1) {
         mkdir(folderPath.c_str(), 0700);
-        cout << "Folder created successfully!" << endl;
-    } else {
-        cout << "Folder already exists." << endl;
     }
 }

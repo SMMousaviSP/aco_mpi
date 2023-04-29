@@ -47,13 +47,11 @@ int main(int argc, char* argv[]) {
 
     // Check if ANTS_ITER is divisible by comm_num
     if (ANTS_ITER % comm_num != 0) {
-        cout << "ANTS_ITER must be divisible by comm_num" << endl;
+        cerr << "ANTS_ITER must be divisible by comm_num" << endl;
         return 1;
     }
 
     int comm_per_iter = ANTS_ITER / comm_num;
-
-    string o;
 
     int graphSize = SIZE;
     srand(time(NULL) + my_rank);
@@ -71,30 +69,20 @@ int main(int argc, char* argv[]) {
 
         // Distributing the graph
         graphData = generateNaiveGraph(graphSize, GRAPH_MIN, GRAPH_MAX);
-        // Broadcast the graph with MPI_Bcast
-        o = "Rank 0 broadcasting graph to all colonies\n";
-        cout << o;
-        // MPI_Bcast(&graphData[0][0], graphSize * graphSize, MPI_T_GRAPH, 0, MPI_COMM_WORLD);
         for (int i = 1; i < comm_sz; i++) {
-            o = "Rank 0 sending graph to colony CN " + to_string(i) + "\n";
-            cout << o;
             MPI_Send(&graphData[0], graphSize * graphSize, MPI_T_GRAPH, i, 0, MPI_COMM_WORLD);
         }
 
         MPI_Status status;
         int source;
         for (int j = 0; j < comm_num; j++) {
-            o = "-------------- CN " + to_string(j) + "\n";
             T_GRAPH bestLength = numeric_limits<T_GRAPH>::max();
             T_GRAPH worstLength = -1;
             int bestColony = -1;
             int worstColony = -1;
-            cout << o;
             for (int i = 1; i < comm_sz; i++) {
                 MPI_Recv(&antLength, 1, MPI_T_PHER, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &status);
                 source = status.MPI_SOURCE;
-                o = "Rank 0 received antLength " + to_string(antLength) + " from colony " + to_string(source) + "\n";
-                cout << o;
                 if (antLength < bestLength) {
                     bestLength = antLength;
                     bestColony = source;
@@ -107,11 +95,7 @@ int main(int argc, char* argv[]) {
 
             // Get pheromones from the best colony
             char mode = M_SEND_PHER;
-            o = "Rank 0 sending mode 1 to best colony" + to_string(bestColony) + " CN " + to_string(j) + "\n";
-            cout << o;
             MPI_Send(&mode, 1, MPI_CHAR, bestColony, 0, MPI_COMM_WORLD);
-            o = "Rank 0 getting best pheromone from best colony CN " + to_string(j) + "\n";
-            cout << o;
             MPI_Recv(&pheromones[0], graphSize * graphSize, MPI_T_PHER, bestColony, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
             // TEMP
             // saveGraph(pheromones, SIZE, "pherRecvFromBest" + to_string(bestColony) + "_comm" + to_string(j) + ".csv");
@@ -139,8 +123,6 @@ int main(int argc, char* argv[]) {
             }
 
             // Broadcast mode 0 to all colonies so they can continue
-            o = "Broadcasting mode 0 to all colonies CN " + to_string(j) + "\n";
-            cout << o;
             mode = M_CONTINUE;
             for (int i = 1; i < comm_sz; i++) {
                 MPI_Send(&mode, 1, MPI_CHAR, i, 0, MPI_COMM_WORLD);
@@ -188,15 +170,9 @@ int main(int argc, char* argv[]) {
             // Send the best ant path to the master
             char mode = -1; // 0: continue, 1: send pheromones, 2: receive and update pheromones
             T_GRAPH bestLength = getBestAntPath(antPathArray, ANTS_N);
-            o = "Sending best length from iteration " + to_string(i + 1) + "\n";
-            cout << o;
             MPI_Send(&bestLength, 1, MPI_T_PHER, 0, 0, MPI_COMM_WORLD);
             while (mode != M_CONTINUE) {
-                o = "Getting mode in rank " + to_string(my_rank) + " and iteration " + to_string(i + 1) + "\n";
-                cout << o;
                 MPI_Recv(&mode, 1, MPI_CHAR, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-                o = "Received mode " + to_string(mode) + " in rank " + to_string(my_rank) + " and iteration " + to_string(i + 1) + "\n";
-                cout << o;
                 if (mode == M_SEND_PHER) {
                     // Send the pheromones to the master
                     // TEMP
