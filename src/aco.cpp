@@ -51,8 +51,5 @@ int main() {
     savePath(antPathArrayIter, "result.csv");
     saveMetadata("metadata.csv",SIZE, alpha, beta, elapsed_time.count());
 
-    printGraph(graphData, SIZE);
-    printPheromone(pheromones, SIZE);
-
     return 0;
 }
