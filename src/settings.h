@@ -20,12 +20,12 @@
 #define SEED 0
 
 #define ANTS_N 4
-#define ANTS_ITER 300
+#define ANTS_ITER 400
 
 // Only used in the parallel version
 #define MPI_T_PHER MPI_FLOAT
 #define MPI_T_GRAPH MPI_FLOAT
-#define COMM_NUM 30
+#define COMM_NUM 40
 // 'W' for updating the worst colony only and 'A' for updating all.
 #define UPDATE_ALL 'A'
 #define UPDATE_WORST 'W'
