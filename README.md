@@ -49,3 +49,6 @@ to the cluster.
 ```bash
 qsub acompi_pbs.sh
 ```
+
+## Preprocessing the Result on the HPC Cluster
+The result of the parallel code is saved in different `csv` files for each process. As the number of processes and communications increases the number of files and their size increases as well. This might make it harder to transfer all of the files to your own computer. In order to preprocess the result and have the best found path of each iteration among all processes in one file you can use the code in the `data_preprocessing` directory. For more information read the `README.md` file in that directory.
