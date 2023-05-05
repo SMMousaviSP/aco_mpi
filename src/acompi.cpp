@@ -76,6 +76,7 @@ int main(int argc, char* argv[]) {
         MPI_Status status;
         int source;
         for (int j = 0; j < comm_num; j++) {
+            // Receiving path lengths from all colonies and finding the best and worst
             T_GRAPH bestLength = numeric_limits<T_GRAPH>::max();
             T_GRAPH worstLength = -1;
             int bestColony = -1;
@@ -97,17 +98,12 @@ int main(int argc, char* argv[]) {
             char mode = M_SEND_PHER;
             MPI_Send(&mode, 1, MPI_CHAR, bestColony, 0, MPI_COMM_WORLD);
             MPI_Recv(&pheromones[0], graphSize * graphSize, MPI_T_PHER, bestColony, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-            // TEMP
-            // saveGraph(pheromones, SIZE, "pherRecvFromBest" + to_string(bestColony) + "_comm" + to_string(j) + ".csv");
 
-
-            
+            // Distributing the pheromone of the best colony based on the update strategy
             if (UPDATE_STRATEGY == UPDATE_WORST) {
                 // Send pheromones only to the worst colony
                 mode = M_RECV_PHER;
                 MPI_Send(&mode, 1, MPI_CHAR, worstColony, 0, MPI_COMM_WORLD);
-                // TEMP
-                // saveGraph(pheromones, SIZE, "pherSendToWorst" + to_string(worstColony) + "_comm" + to_string(j) + ".csv");
                 MPI_Send(&pheromones[0], graphSize * graphSize, MPI_T_PHER, worstColony, 0, MPI_COMM_WORLD);
             } else if (UPDATE_STRATEGY == UPDATE_ALL) {
                 // Send pheromones to all colonies except the bestColony
@@ -115,8 +111,6 @@ int main(int argc, char* argv[]) {
                 for (int i = 1; i < comm_sz; i++) {
                     if (i != bestColony) {
                         MPI_Send(&mode, 1, MPI_CHAR, i, 0, MPI_COMM_WORLD);
-                        // TEMP
-                        // saveGraph(pheromones, SIZE, "pherSendToOthers" + to_string(i) + "_comm" + to_string(j) + ".csv");
                         MPI_Send(&pheromones[0], graphSize * graphSize, MPI_T_PHER, i, 0, MPI_COMM_WORLD);
                     }
                 }
@@ -163,9 +157,10 @@ int main(int argc, char* argv[]) {
         }
         evaporatePheromones(pheromones, SIZE);
 
-        // Saving the result of each iteration to a file
+        // Saving the result of each iteration
         antPathArrayIter[i] = antPathArray;
 
+        // Sending path length and waiting for further instructions from the master
         if ((i + 1) % comm_per_iter == 0) {
             // Send the best ant path to the master
             char mode = -1; // 0: continue, 1: send pheromones, 2: receive and update pheromones
@@ -175,20 +170,16 @@ int main(int argc, char* argv[]) {
                 MPI_Recv(&mode, 1, MPI_CHAR, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
                 if (mode == M_SEND_PHER) {
                     // Send the pheromones to the master
-                    // TEMP
-                    // saveGraph(pheromones, SIZE, "pherSendToMaster" + to_string(my_rank) + "_iter" + to_string(i + 1) + ".csv");
                     MPI_Send(&pheromones[0], graphSize * graphSize, MPI_T_PHER, 0, 0, MPI_COMM_WORLD);
                 } else if (mode == M_RECV_PHER) {
                     // Receive the pheromones from the master
                     MPI_Recv(&pheromones[0], graphSize * graphSize, MPI_T_PHER, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-                    // TEMP
-                    // saveGraph(pheromones, SIZE, "pherRecvFromMaster" + to_string(my_rank) + "_iter" + to_string(i + 1) + ".csv");
                 }
             }
             MPI_Barrier(MPI_COMM_WORLD);
-            
         }
     }
+
     string file_name = out_dir + "/result_" + to_string(my_rank) + ".csv";
     savePath(antPathArrayIter, file_name);
 
