@@ -19,6 +19,7 @@ int main() {
 
     srand(time(NULL));
 
+    // Start the timer
 	std::chrono::time_point<std::chrono::high_resolution_clock> start_time = std::chrono::high_resolution_clock::now();
 
     int graphSize = SIZE;
@@ -45,6 +46,7 @@ int main() {
         antPathArrayIter[i] = antPathArray;
     }
 
+    // Stop the timer
 	std::chrono::time_point<std::chrono::high_resolution_clock> end_time = std::chrono::high_resolution_clock::now();
 	std::chrono::milliseconds elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
 
