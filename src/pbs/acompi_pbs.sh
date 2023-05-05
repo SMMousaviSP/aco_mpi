@@ -7,4 +7,4 @@
 #PBS -q short_cpuQ
 
 module load mpich-3.2
-mpirun.actual -n 10 /absolute/path/to/binary.out
+mpirun.actual -n 10 /absolute/path/to/binary.out number_of_threads_for_openmp output_directory
