@@ -5,10 +5,10 @@
 
 
 /**
- * @brief Generate weigthed graph where each tie is randomly generated.
+ * @brief Generate weighted graph where each tie is randomly generated.
  * 
- * Graph is generated with random weigthed ties but no self-ties to nodes.
- * The weigth is within an interval
+ * Graph is generated with random weighted ties but no self-ties to nodes.
+ * The weighted is within an interval
  *
  * @param size      size of the adjacency matrix
  * @param min       minimum generated number
@@ -38,6 +38,15 @@ T_GRAPH * generateNaiveGraph(int size, T_GRAPH min, T_GRAPH max) {
 }
 
 
+/**
+ * @brief Generates an empty graph of a given size.
+ *
+ * This function creates and initializes a 2D array representing 
+ * an undirected graph where no edges are initially present.
+ *
+ * @param size The size of the graph (number of vertices).
+ * @return A dynamically allocated T_GRAPH pointer to the resulting graph.
+ */
 T_GRAPH * generateEmptyGraph(int size) {
     T_GRAPH * graph = new T_GRAPH[size * size];
     for (int i = 0; i < size; i++) {
